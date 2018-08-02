@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from stoneException import StoneException
+
 class StoneToken():
     def __init__(self, line):
         #self.EOF = Token(-1)
@@ -20,11 +22,17 @@ class StoneToken():
         return False
 
     def getNumber(self):
-        pass
+        raise StoneException("not number token")
 
     def getText(self):
         return ""
 
+# Testing and Usage
 if __name__ == '__main__':
     t = StoneToken(3)
-    print(t)
+    print(t.getLineNumber())
+    print(t.isIdentifier())
+    print(t.isNumber())
+    print(t.isString())
+    print(t.getText())
+    print(t.getNumber())
