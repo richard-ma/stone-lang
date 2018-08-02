@@ -1,6 +1,9 @@
 # stone-lang
 A testing project for creation of computer language
 
+## 参考书籍
+* [两周自制脚本语言](https://www.amazon.cn/dp/B0153171U2/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1533199542&sr=1-1&keywords=%E4%B8%A4%E5%91%A8%E8%87%AA%E5%88%B6%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80)
+
 ## Stone语法
 
 ### 数据类型
@@ -39,5 +42,13 @@ while i < 10 {
 }
 ```
 
-## 参考书籍
-* [两周自制脚本语言](https://www.amazon.cn/dp/B0153171U2/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1533199542&sr=1-1&keywords=%E4%B8%A4%E5%91%A8%E8%87%AA%E5%88%B6%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80)
+## 词法分析
+* 将程序分解为Token（单词或者操作符），存入StoneToken对象中
+* 使用正则表达式进行分类
+
+### Token分类
+* 标识符 `[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\|\|` `字母开头的字母和数字,以及运算符号组成标识符`
+* 数值 `[0-9]+` `纯数字为数值字面量`
+* 字符串 `(\\"|\\\\|\\n|[^"])*`
+
+## 语法分析
