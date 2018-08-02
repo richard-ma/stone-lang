@@ -4,9 +4,10 @@
 from stoneException import StoneException
 
 class StoneToken():
+    EOF = None
+    EOL = "\\n"
+
     def __init__(self, line):
-        #self.EOF = Token(-1)
-        self.EOL = "\\n"
         self.lineNumber = line
 
     def getLineNumber(self):
