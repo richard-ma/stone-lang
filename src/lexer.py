@@ -14,29 +14,30 @@ class LineReader():
         self.f = f
         self.lineNumber = 0
 
-    def readline():
+    def readline(self):
         line = f.readline()
+        print(line)
         if len(line) == 0: # EOF
             return None
         else:
-            return line
             self.lineNumber += 1
+            return line
 
-    def getLineNumber(): # 为了添加这个方法创建了LineReader类
+    def getLineNumber(self): # 为了添加这个方法创建了LineReader类
         return self.lineNumber
 
 class Lexer():
     def __init__(self, reader):
         self.regexPat = "\\s*((//.*)|([0-9]+)|(\"(\\\\\"|\\\\\\\\|\\\\n|[^\"])*\")" + \
-                "|[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\\|\\||\\p{Punct})?"
-        self.patten = re.compile(self.regexPat)
+                "|[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\\|\\||[`~!@#\$%\^&\*\(\)-=_+\[\]\\\{\}\|;':\",./<>\?])?"
+        self.pattern = re.compile(self.regexPat)
         self.queue = deque()
         self.hasMore = True
         self.lineNumberReader = reader
 
     def read(self):
         if (self.fillQueue(0)):
-            return self.queue.leftpop()
+            return self.queue.popleft()
         else:
             return StoneToken.EOF
 
@@ -68,31 +69,50 @@ class Lexer():
         pos = 0 # 匹配起始位置
         endPos = len(line) # 匹配结束位置
         while (pos < endPos):
-            macher = self.pattern.match(line, pos, endPos) # 在pos和endPos之间检查有无匹配
+            matcher = self.pattern.match(line, pos, endPos) # 在pos和endPos之间检查有无匹配
             if matcher: # 存在匹配
-                self.addToken(lineNo, macher) # 将这个匹配结果添加到token队列中 -> self.queue
-                pos = macher.end() # 更新位置，当前匹配的对象跳过去，看后面的部分
+                self.addToken(lineNo, matcher) # 将这个匹配结果添加到token队列中 -> self.queue
+                pos = matcher.end() # 更新位置，当前匹配的对象跳过去，看后面的部分
+                print("pos: %d" % (pos))
             else:
                 raise ParseException("Bad token at line" + lineNo) # 没有匹配，证明这个地方的单词不合法，有语法错误
         self.queue.append(IdToken(lineNo, StoneToken.EOL)) # 添加行结束token
 
-    def addToken(self, lineNo, macher):
-        m = macher.group(1)
-        if m is not None:
-            if macher.group(2) is None:
-                if macher.group(3) is not None:
+    def addToken(self, lineNo, matcher):
+        m = matcher.group(1)
+        if m is not None: # 不是空白行或空格
+            if matcher.group(2) is None: # 不是注释
+                if matcher.group(3) is not None:
                     token = NumToken(lineNo, int(m))
-                elif macher.group(4) is not None:
-                    token = StrToken(lineNo, str(m))
+                elif matcher.group(4) is not None:
+                    token = StrToken(lineNo, self.toStringLiteral(str(m)))
                 else:
                     token = IdToken(lineNo, m)
-            self.queue.append(token)
+                print("[%d] %s" % (token.getLineNumber(), token.getText()))
+                self.queue.append(token)
 
+    def toStringLiteral(self, s):
+        sb = list()
+        l = len(s) - 1
+        i = 0
+        while i < l:
+            c = s[i]
+            if c == '\\' and i + 1 < l:
+                c2 = s[i+1]
+                if c2 == "" or c2 == '\\':
+                    c = s[i+1]
+                elif c2 == 'n':
+                    i += 1
+                    c = '\n'
+
+            sb.append(c)
+            i += 1
+        return ''.join(sb)
 
 if __name__ == "__main__":
     with open("../samples/first.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
-        lexer.read()
-
-    print(lexer.queue)
+        token = lexer.read()
+        while token != StoneToken.EOF:
+            token = lexer.read()
