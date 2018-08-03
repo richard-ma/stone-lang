@@ -16,7 +16,7 @@ class LineReader():
 
     def readline(self):
         line = f.readline()
-        print(line)
+        #print(line)
         if len(line) == 0: # EOF
             return None
         else:
@@ -73,7 +73,7 @@ class Lexer():
             if matcher: # 存在匹配
                 self.addToken(lineNo, matcher) # 将这个匹配结果添加到token队列中 -> self.queue
                 pos = matcher.end() # 更新位置，当前匹配的对象跳过去，看后面的部分
-                print("pos: %d" % (pos))
+                #print("pos: %d" % (pos))
             else:
                 raise ParseException("Bad token at line" + lineNo) # 没有匹配，证明这个地方的单词不合法，有语法错误
         self.queue.append(IdToken(lineNo, StoneToken.EOL)) # 添加行结束token
@@ -88,7 +88,7 @@ class Lexer():
                     token = StrToken(lineNo, self.toStringLiteral(str(m)))
                 else:
                     token = IdToken(lineNo, m)
-                print("[%d] %s" % (token.getLineNumber(), token.getText()))
+                #print("[%d] %s" % (token.getLineNumber(), token.getText()))
                 self.queue.append(token)
 
     def toStringLiteral(self, s):
