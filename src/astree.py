@@ -3,19 +3,21 @@
 
 class ASTree():
     def __init__(self):
-        self.children = list()
+        self.l = list()
 
     def child(self, i):
-        return self.children[i]
+        return self.l[i]
 
     def numChildren(self):
-        return len(self.children)
+        return len(self.l)
 
     def children(self):
-        return self.children
+        return self.l
 
     def location(self):
         pass
 
-    #def iterator(self):
-        #return self.children()
+if __name__ == "__main__":
+    tree = ASTree()
+    assert tree.numChildren() == 0
+    assert tree.children() == list()
