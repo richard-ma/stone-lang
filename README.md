@@ -52,3 +52,37 @@ while i < 10 {
 * 字符串 `(\\"|\\\\|\\n|[^"])*`
 
 ## 语法分析
+* 将词法分析的结果构建成语法树
+
+###  语法树
+* 例如3 + 2 * 5这个表达式的语法树为
+```
+    2   *   5
+    |   |   |
+    +---+---+
+        10
+3   +   |
+|   |   |
++---+---+
+    13
+```
+
+### 语法树类设计
+```
+        ASTree
+        |
+    +---+---+
+    |       |
+  ASTList   ASTLeaf
+    |       |
+BinaryExpr  +---+
+            |   | 
+ NumberLiteral  Name 
+```
+* ASTLeaf 表示树的叶子节点
+* ASTList 表示树的分支节点
+* BinaryExpr 为二目操作，left()和right()方法获得操作数，operator()获得操作符
+* NumberLiteral 由NumToken构建
+* Name 由StrToken构建
+
+### 语法树的构建
