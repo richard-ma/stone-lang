@@ -114,5 +114,7 @@ if __name__ == "__main__":
         reader = LineReader(f)
         lexer = Lexer(reader)
         token = lexer.read()
+        if token != None: print(token.getText())
         while token != StoneToken.EOF:
             token = lexer.read()
+            if token != None: print(token.getText())
