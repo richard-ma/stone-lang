@@ -85,4 +85,24 @@ BinaryExpr  +---+
 * NumberLiteral 由NumToken构建
 * Name 由StrToken构建
 
-### 语法树的构建
+### Stone语言语法
+
+#### BNF
+`BNF`是一种语法的表示方法
+
+* `{pat}`       pat匹配至少0次
+* `[pat]`       pat匹配0次或1次
+* `pat1 | pat2` 匹配pat1或pat2
+* `()`          将括号内视为整体
+
+#### 用`BNF`表示的Stone语言语法
+* primary:  "(" expr ")" | NUMBER | IDENTIFIER | STRING
+* factor:   "-" primary | primary
+* expr:     factor { OP factor }
+* block:    "{" [statement]{(";" | EOL) [statement]} "}"
+* simple:   expr
+* statement:
+    * "if" expr block ["else" block]
+    * "while" expr block
+    * simple
+* program:  [statement](";" | EOL)
