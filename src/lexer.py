@@ -15,7 +15,7 @@ class LineReader():
         self.lineNumber = 0
 
     def readline(self):
-        line = f.readline()
+        line = self.f.readline()
         #print(line)
         if len(line) == 0: # EOF
             return None
@@ -33,7 +33,7 @@ class Lexer():
         self.pattern = re.compile(self.regexPat)
         self.queue = deque()
         self.hasMore = True
-        self.lineNumberReader = reader
+        self.reader = reader
 
     def read(self):
         if (self.fillQueue(0)):
@@ -57,7 +57,7 @@ class Lexer():
 
     def readLine(self):
         try:
-            line = reader.readline()
+            line = self.reader.readline()
         except Exception as e:
             raise ParseException(e)
 
@@ -65,7 +65,7 @@ class Lexer():
             self.hasMore = False
             return
 
-        lineNo = reader.getLineNumber() # 获得当前读取的行号
+        lineNo = self.reader.getLineNumber() # 获得当前读取的行号
         pos = 0 # 匹配起始位置
         endPos = len(line) # 匹配结束位置
         while (pos < endPos):
