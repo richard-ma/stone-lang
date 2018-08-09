@@ -96,13 +96,13 @@ BinaryExpr  +---+
 * `()`          将括号内视为整体
 
 #### 用`BNF`表示的Stone语言语法
-* primary:  `"(" expr ")" | NUMBER | IDENTIFIER | STRING`
-* factor:   `"-" primary | primary`
-* expr:     `factor { OP factor }`
-* block:    `"{" [statement]{(";" | EOL) [statement]} "}"`
-* simple:   `expr`
-* statement:
-    * `"if" expr block ["else" block]`
-    * `"while" expr block`
-    * `simple`
-* program:  `[statement](";" | EOL)`
+* primary:  `"(" expr ")" | NUMBER | IDENTIFIER | STRING` (终结符)
+* factor:   `"-" primary | primary` 
+* expr:     `factor { OP factor }` (表达式)
+* block:    `"{" [statement]{(";" | EOL) [statement]} "}"` (代码块)
+* simple:   `expr` (不知道这里为什么这么写，实际上就是表达式)
+* statement: (语句)
+    * `"if" expr block ["else" block]` (if语句)
+    * `"while" expr block` (while语句)
+    * `simple` (单独的表达式)
+* program:  `[statement](";" | EOL)` (整个程序)
