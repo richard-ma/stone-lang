@@ -4,7 +4,10 @@ A testing project for creation of computer language
 ## 参考书籍
 * [两周自制脚本语言](https://www.amazon.cn/dp/B0153171U2/ref=sr_1_1?s=digital-text&ie=UTF8&qid=1533199542&sr=1-1&keywords=%E4%B8%A4%E5%91%A8%E8%87%AA%E5%88%B6%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80)
 
-## Stone语法
+## 备注
+* 章节名称后面括号数字对应书中章节编号
+
+## Stone语法(2)
 
 ### 数据类型
 * 数值
@@ -42,7 +45,7 @@ while i < 10 {
 }
 ```
 
-## 词法分析
+## 词法分析(3)
 * 将程序分解为Token（单词或者操作符），存入StoneToken对象中
 * 使用正则表达式进行分类
 
@@ -51,7 +54,7 @@ while i < 10 {
 * 数值 `[0-9]+` `纯数字为数值字面量`
 * 字符串 `(\\"|\\\\|\\n|[^"])*`
 
-## 语法分析
+## 语法分析(4)
 * 将词法分析的结果构建成语法树
 
 ###  语法树
@@ -85,7 +88,7 @@ BinaryExpr  +---+
 * NumberLiteral 由NumToken构建
 * Name 由StrToken构建
 
-### Stone语言语法
+## Stone语言语法(5)
 
 #### BNF
 `BNF`是一种语法的表示方法
