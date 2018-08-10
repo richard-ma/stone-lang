@@ -109,3 +109,34 @@ BinaryExpr  +---+
     * `"while" expr block` (while语句)
     * `simple` (单独的表达式)
 * program:  `[statement](";" | EOL)` (整个程序)
+
+## 语法分析方式(16)
+* 使用四则运算表达式为例子进行简单的语法分析程序编写
+
+### 四则运算BNF
+* factor:       `NUMBER | "(" expression ")"` (数字或表达式)
+* term :        `factor { ("*" | "/") factor }` (乘除运算)
+* expression:   `term { ("+" | "-") term }` (加减运算)
+
+### 朴素的语法分析方式
+* factor、term以及expression为三个独立的函数
+* 函数中使用词法分析结果判断是否符合BNF
+* 使用分支语句表现或的关系
+* 不能通过则抛出ParseException异常
+* Code: /src/parseExpr.py
+* TestCase: /samples/expression.stone
+* TestCase: /samples/expression_parseexception.stone
+
+### 包含比较和逻辑运算的表达式BNF
+* factor:       `NUMBER | "(" expression ")"` (数字或表达式) [这里的expression是不是写错了？下面没有定义]
+* term :        `factor { ("*" | "/") factor }` (乘除运算)
+* addexpr:      `term { ("+" | "-") term }` (加减运算)
+* relexpr:      `addexpr { ("<" | ">") addexpr }` (大于小于)  
+* eqexpr:       `relexpr { ("==" | "!=") relexpr }` (等于不等)     
+* andexpr:      `eqexpr { "&&" eqexpr }` (逻辑与)
+* orexpr:       `andexpr { "||" andexpr }` (逻辑或)
+
+### 算符优先分析法
+* 将所有运算符号按照优先级登记入一个表中
+* 在遇到运算符号时，按照优先级匹配
+* 是LR(1)分析的简化版本
