@@ -140,3 +140,18 @@ BinaryExpr  +---+
 * 将所有运算符号按照优先级登记入一个表中
 * 在遇到运算符号时，按照优先级匹配
 * 是LR(1)分析的简化版本
+* Code: /src/opPrecedenceParser.py
+* TestCase: /samples/expression.stone
+* TestCase: /samples/expression_parseexception.stone
+
+#### TIPS: Python嵌套类
+```
+# from /src/opPrecedenceParser.py
+
+class A:
+    class B: # 在A中的类B 一般B是只在A中使用的类
+        def __init__(self, v):
+            self.value = v
+    def __init__(self): # 在A中使用B类的对象
+        self.objOfB = self.B(5) # B类使用的时候要加上self
+```
