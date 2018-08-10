@@ -56,6 +56,7 @@ class ExprParser():
 if __name__ == '__main__':
 
     # 合法输入
+    print('parsing expression.stone')
     with open("../samples/expression.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
@@ -67,9 +68,10 @@ if __name__ == '__main__':
         ep = ExprParser(lexer)
 
         t = ep.expression()
-        print("=> %s", t)
+        print("=> %s" % (t))
 
     # 非法输入 应该产生ParseException
+    print('parsing expression_parseexception.stone')
     with open("../samples/expression_parseexception.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
@@ -81,6 +83,6 @@ if __name__ == '__main__':
         ep = ExprParser(lexer)
 
         t = ep.expression()
-        print("=> %s", t)
+        print("=> %s" % (t))
 
 
