@@ -155,3 +155,23 @@ class A:
     def __init__(self): # 在A中使用B类的对象
         self.objOfB = self.B(5) # B类使用的时候要加上self
 ```
+
+## 用于语法分析的Parser库(17)
+
+### 组合子分析
+
+#### 组合子类结构
+```
+Element-----+---Parse()
+    |       +---Match()
+    |
+    +-------+-------+-------+-------+-------+
+    |       |       |       |       |       |
+ AToken    Expr    Leaf    Repeat  OrTree  Tree
+    |               |             
+    |              Skip
+    |
+    +-------+-------+
+    |       |       |
+ IdToken  NumToken  StrToken
+```
