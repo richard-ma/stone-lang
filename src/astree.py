@@ -15,7 +15,12 @@ class ASTree():
         return self.l
 
     def location(self):
-        pass
+        return None
+
+    # 书中实现了java的iterable接口
+    # 添加此方法用于向内部添加child
+    def add(self, child):
+        self.l.append(child)
 
 if __name__ == "__main__":
     tree = ASTree()
