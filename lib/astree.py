@@ -1,28 +1,32 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-class ASTree():
+from abc import *
+
+class ASTree(ABC):
+    @abstractmethod
     def __init__(self):
-        self.l = list()
+        pass
 
+    @abstractmethod
     def child(self, i):
-        return self.l[i]
+        pass
 
+    @abstractmethod
     def numChildren(self):
-        return len(self.l)
+        pass
 
+    @abstractmethod
     def children(self):
-        return self.l
+        pass
 
+    @abstractmethod
     def location(self):
-        return None
+        pass
 
-    # 书中实现了java的iterable接口
-    # 添加此方法用于向内部添加child
+    @abstractmethod
     def add(self, child):
-        self.l.append(child)
+        pass
 
-if __name__ == "__main__":
-    tree = ASTree()
-    assert tree.numChildren() == 0
-    assert tree.children() == list()
+if __name__ == '__main__':
+    a = ASTree() # TypeError
