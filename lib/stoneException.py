@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 class StoneException(Exception):
     def __init__(self, errmsg):
         super(StoneException, self).__init__()
