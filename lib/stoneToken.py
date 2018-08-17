@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from stoneException import StoneException
+from lib.stoneException import StoneException
 
 class StoneToken():
     EOF = None
@@ -22,8 +22,9 @@ class StoneToken():
     def isString(self):
         return False
 
-    def getNumber(self):
-        raise StoneException("not number token")
+    # 只有NumToken才有这个方法
+    #def getNumber(self):
+        #raise StoneException("not number token")
 
     def getText(self):
         return ""
@@ -36,4 +37,4 @@ if __name__ == '__main__':
     print(t.isNumber())
     print(t.isString())
     print(t.getText())
-    print(t.getNumber())
+    #print(t.getNumber())
