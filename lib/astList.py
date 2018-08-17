@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from astree import ASTree
+from lib.astree import ASTree
 
 class ASTList(ASTree):
     def __init__(self, l):
@@ -37,6 +37,13 @@ class ASTList(ASTree):
                 return s
 
         return None
+
+    def add(self, node):
+        if isinstance(node, ASTree):
+            self.l.append(node)
+            return True
+        else:
+            raise TypeError('node is NOT ASTree type.')
 
 if __name__ == '__main__':
     from astLeaf import ASTLeaf
