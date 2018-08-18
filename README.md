@@ -1,4 +1,5 @@
 [![Build Status](https://www.travis-ci.org/richard-ma/stone-lang.svg?branch=master)](https://www.travis-ci.org/richard-ma/stone-lang)
+[![Coverage Status](https://coveralls.io/repos/github/richard-ma/stone-lang/badge.svg)](https://coveralls.io/github/richard-ma/stone-lang)
 
 # stone-lang
 A testing project for creation of computer language
