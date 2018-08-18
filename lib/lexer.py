@@ -3,11 +3,11 @@
 
 import re
 from collections import deque
-from stoneToken import StoneToken
-from numToken import NumToken
-from strToken import StrToken
-from idToken import IdToken
-from parseException import ParseException
+from lib.stoneToken import StoneToken
+from lib.numToken import NumToken
+from lib.strToken import StrToken
+from lib.idToken import IdToken
+from lib.parseException import ParseException
 
 class LineReader():
     def __init__(self, f):
@@ -110,7 +110,7 @@ class Lexer():
         return ''.join(sb)
 
 if __name__ == "__main__":
-    with open("../samples/first.stone", 'r') as f:
+    with open("samples/first.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
         token = lexer.read()
