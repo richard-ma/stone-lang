@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from astList import ASTList
+from lib.astList import ASTList
 
 class BinaryExpr(ASTList):
     def __init__(self, l):
