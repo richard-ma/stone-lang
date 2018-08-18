@@ -3,6 +3,8 @@
 
 import re
 from collections import deque
+from io import IOBase
+
 from lib.stoneToken import StoneToken
 from lib.numToken import NumToken
 from lib.strToken import StrToken
@@ -11,12 +13,14 @@ from lib.parseException import ParseException
 
 class LineReader():
     def __init__(self, f):
+        if not isinstance(f, IOBase):
+            raise TypeError()
+
         self.f = f
         self.lineNumber = 0
 
     def readline(self):
         line = self.f.readline()
-        #print(line)
         if len(line) == 0: # EOF
             return None
         else:
