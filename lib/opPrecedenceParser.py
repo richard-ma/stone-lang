@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from lexer import *
-from parseException import *
-from astLeaf import ASTLeaf
-from binaryExpr import BinaryExpr
-from numberLiteral import NumberLiteral
+from lib.lexer import *
+from lib.parseException import *
+from lib.astLeaf import ASTLeaf
+from lib.binaryExpr import BinaryExpr
+from lib.numberLiteral import NumberLiteral
 
 class OpPrecedenceParser():
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     # 合法输入
     print('parsing expression.stone')
-    with open("../samples/expression.stone", 'r') as f:
+    with open("samples/expression.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
         #token = lexer.read()
@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     # 非法输入 应该产生ParseException
     print('parsing expression_parseexception.stone')
-    with open("../samples/expression_parseexception.stone", 'r') as f:
+    with open("samples/expression_parseexception.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
         #token = lexer.read()
