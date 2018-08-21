@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from abc import *
+
+class Parser():
+    class Element(ABC):
+        @abstractmethod
+        def parse(self, lexer, res):
+            pass
+
+        @abstractmethod
+        def match(self, lexer):
+            pass
+
+'''
 from parseException import ParseException
 from astList import ASTList
 from astLeaf import ASTLeaf
-
-class Element():
-    def parse(self, lexer, res):
-        return None
-
-    def match(self, lexer):
-        return None
-
-if __name__ == '__main__':
-    e = Element()
-    assert e.parse() is None
-    assert e.match() is None
-    exit()
 
 class Tree(Element):
     def __init__(self, parser):
@@ -223,3 +223,4 @@ class Factory():
 
 class Parser():
     pass
+'''
