@@ -3,6 +3,9 @@
 
 from abc import *
 
+from lib.lexer import *
+from lib.astree import *
+
 class Parser():
     class Element(ABC):
         @abstractmethod
@@ -13,20 +16,31 @@ class Parser():
         def match(self, lexer):
             pass
 
+    class Tree(Element):
+        def __init__(self, parser):
+            if not isinstance(parser, Parser):
+                raise TypeError()
+
+            self.parser = parser
+
+        def parse(self, lexer, res):
+            if not all(
+                    isinstance(lexer, Lexer),
+                    isinstance(res, ASTree)):
+                raise TypeError()
+
+            res.add(self.parser.parse(lexer))
+
+        def match(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
+            return self.parser.match(lexer)
+
 '''
 from parseException import ParseException
 from astList import ASTList
 from astLeaf import ASTLeaf
-
-class Tree(Element):
-    def __init__(self, parser):
-        self.parser = parser
-
-    def parse(self, lexer, res):
-        res.add(self.parser.parse(lexer))
-
-    def match(self, lexer):
-        return self.parser.match(lexer)
 
 class OrTree(Element):
     def __init__(self, p):

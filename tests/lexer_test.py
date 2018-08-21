@@ -43,10 +43,66 @@ class TestLexer(unittest.TestCase):
     """Test case docstring."""
 
     def setUp(self):
-        pass
+        # fake input file
+        # https://stackoverflow.com/questions/11833428/how-to-create-fake-text-file-in-python
+        # https://docs.python.org/3/library/io.html#io.StringIO
+        self.f = io.StringIO()
+        self.lines = ['First 1 "string"\n', 'Second line\n', 'Third line\n']
+        self.f.write(''.join(self.lines))
+        # StringIO need reset file pointer to call readline()
+        # https://bytes.com/topic/python/answers/478319-stringio-readline-returns
+        self.f.seek(0)
+        self.lineReader = LineReader(self.f)
+        self.lexer = Lexer(self.lineReader)
 
     def tearDown(self):
         pass
+
+    def test_read(self):
+        # 'First' IdToken
+        token = self.lexer.read()
+        self.assertEqual(isinstance(token, IdToken), True)
+        self.assertEqual('First', token.getText())
+
+        # 1 NumToken
+        token = self.lexer.read()
+        self.assertEqual(isinstance(token, NumToken), True)
+        self.assertEqual('1', token.getText())
+
+        # "string" StrToken
+        token = self.lexer.read()
+        self.assertEqual(isinstance(token, StrToken), True)
+        self.assertEqual('"string', token.getText()) # match "string
+
+        # EOL Token
+        token = self.lexer.read()
+        self.assertEqual(isinstance(token, IdToken), True)
+        self.assertEqual('\\n', token.getText()) # \n -> \\n
+
+    def test_peek(self):
+        # 'First' IdToken
+        token = self.lexer.peek(0)
+        self.assertEqual(isinstance(token, IdToken), True)
+        self.assertEqual('First', token.getText())
+        self.lexer.read()
+
+        # 1 NumToken
+        token = self.lexer.peek(0)
+        self.assertEqual(isinstance(token, NumToken), True)
+        self.assertEqual('1', token.getText())
+        self.lexer.read()
+
+        # "string" StrToken
+        token = self.lexer.peek(0)
+        self.assertEqual(isinstance(token, StrToken), True)
+        self.assertEqual('"string', token.getText()) # match "string
+        self.lexer.read()
+
+        # EOL Token
+        token = self.lexer.peek(0)
+        self.assertEqual(isinstance(token, IdToken), True)
+        self.assertEqual('\\n', token.getText()) # \n -> \\n
+        self.lexer.read()
 
 
 if __name__ == '__main__':
