@@ -113,6 +113,23 @@ BinaryExpr  +---+
     * `simple` (单独的表达式)
 * program:  `[statement](";" | EOL)` (整个程序)
 
+### Parser类的方法
+* `rule()/rule(Class c)` 创建Parser对象
+* `parse(Lexer l)` 执行语法分析
+* `number()/number(Class c)` 向语法规则中添加终结符(Number)
+* `identifier(HastSet r)/identifier(Class c, HastSet r)` 向语法规则中添加除保留字r之外的标识符
+* `string()/string(Class c)` 向语法规则中添加字符串终结符
+* `token(String pat)` 向语法规则中添加与pat匹配的终结符
+* `sep(pat)` 向语法规则中添加与pat匹配但为包含于抽象语法树的终结符
+* `ast(Parser p)` 向语法规则中添加非终结符p
+* `option(Parser p)` 向语法规则中添加可省略的非终结符p
+* `maybe(Parser p)` 向语法规则中添加可省略的非终结符p（如果省略，则作为仅有根节点的语法树处理）
+* `or(Parser p...)` 向语法规则中添加若干个具有or关系的非终结符p
+* `repeat(Parser p)` 向语法规则中添加至少重复出现0次的非终结符p
+* `expression(Parser p, Operators op)` 向语法规则中添加双目运算表达式（p是因子，op是运算符表）
+* `reset()/reset(Class c)` 清空语法规则
+* `insertChoice(Parser p)` 为语法规则起始处的or添加新的分支选项
+
 ## 语法分析方式(16)
 * 使用四则运算表达式为例子进行简单的语法分析程序编写
 
