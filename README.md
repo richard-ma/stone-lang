@@ -91,6 +91,54 @@ BinaryExpr  +---+
 * NumberLiteral 由NumToken构建
 * Name 由StrToken构建
 
+#### TIPS: Python Iterator和Generator
+```
+##########################################
+# Iterator
+
+class Yrange:
+    def __init__(self, n):
+        self.i = 0
+        self.n = n
+
+    # 被iter()函数调用，生成iterator
+    def __iter__(self):
+        return self
+
+    # 每次调用返回一个值，可以用于一次循环
+    def __next__(self):
+        if self.i < self.n:
+            i = self.i
+            self.i += 1
+            return i
+        else:
+            raise StopIteration()
+
+# for i in Yrange(3):
+#     print(i)
+# => 0
+# => 1
+# => 2
+
+#
+##########################################
+
+##########################################
+# Generator
+
+def myGenerator(n):
+    i = 0
+    while i < n:
+        yield i
+        i += 1
+
+# print(list(myGenerator(3)))
+# => [0, 1, 2]
+
+#
+##########################################
+```
+
 ## Stone语言语法(5)
 
 #### BNF
