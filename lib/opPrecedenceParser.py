@@ -27,7 +27,7 @@ class OpPrecedenceParser():
         self.operators["^"] = self.Precedence(4, False)
 
     def expression(self):
-        right = self.factor()
+        right = self.factor() # 第一个终结符
         next = self.nextOperator()
         while next != None:
             right = self.doShift(right, next.value)
@@ -45,39 +45,44 @@ class OpPrecedenceParser():
 
         return BinaryExpr([left, op, right])
 
+    # 如果下一个词是操作符，返回操作符的优先级和结合性，如果不是则返回None
     def nextOperator(self):
         t = self.lexer.peek(0) # 获取下一个词
         if t.isIdentifier(): # 是标识符的话，返回标识符的优先级和结合性质
             return self.operators.get(t.getText())
         else:
-            return None # 返回None说明没有下一个操作符了，这个操作符是最右侧的了
+            return None # 返回None说明不是操作符
 
+    # 判断右侧是否为表达式
     def rightIsExpr(self, prec, nextPrec):
         if nextPrec.leftAssoc:
             return prec < nextPrec.value # 2 + 3 * 5: 3 * 5是一个右侧的表达式
         else:
             return prec <= nextPrec.value # 2 ^ 3 ^ 7: ^幂运算符是右结合的，所以这时候右侧(3 ^ 7)是表达式
 
+    # 数字或括号为终结符
     def factor(self):
         if self.isToken("("): # "(" expression ")"
             self.token("(")
-            e = self.expression()
+            e = self.expression() # 打开括号，计算表达式的值并作为结果返回
             self.token(")")
             return e
         else: # NUMBER
             t = self.lexer.read()
             if t.isNumber():
-                n = NumberLiteral(t)
+                n = NumberLiteral(t) # 直接返回对应的数字
                 return n
             else:
                 raise ParseException(t)
 
-    def token(self, name): # 读入的字符是标识符name
+    # 读入的字符是标识符name
+    def token(self, name):
         t = self.lexer.read()
         if not (t.isIdentifier() and name == t.getText()):
             raise ParseException(t)
 
-    def isToken(self, name): # 判断下一个字符是否为标识符name
+    # 判断下一个字符是否为标识符name
+    def isToken(self, name):
         t = self.lexer.peek(0)
         return t.isIdentifier() and name == t.getText()
 
