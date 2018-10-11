@@ -5,8 +5,10 @@ from abc import *
 
 from lib.lexer import *
 from lib.astree import *
+from lib.astList import *
 
 class Parser():
+    # 基类
     class Element(ABC):
         @abstractmethod
         def parse(self, lexer, res):
@@ -16,6 +18,7 @@ class Parser():
         def match(self, lexer):
             pass
 
+    # 表达式实现
     class Tree(Element):
         def __init__(self, parser):
             if not isinstance(parser, Parser):
@@ -37,93 +40,261 @@ class Parser():
 
             return self.parser.match(lexer)
 
+    class OrTree(Element):
+        def __init__(self, parsers):
+            if not isinstance(parsers, Parser):
+                raise TypeError()
+
+            self.parsers = parsers
+
+        def parse(self, lexer, res):
+            if not all(
+                    isinstance(lexer, Lexer),
+                    isinstance(res, ASTree)):
+                raise TypeError()
+
+            p = self.choose(lexer)
+            if p == None:
+                raise ParseException(lexer.peek(0))
+            else:
+                res.add(p.parse(lexer))
+
+        def match(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
+            return self.choose(lexer) != None
+
+        # 遍历Parsers，有可以匹配的就返回
+        def choose(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
+            for p in self.parsers:
+                if p.match(lexer):
+                    return p
+            return None
+
+        # 添加parser
+        def insert(self, parser):
+            if not isinstance(parser, Parser):
+                raise TypeError()
+
+            self.parsers = [parser] + self.parsers
+
+    class Repeat(Element):
+        def __init__(self, parser, once):
+            if not all(
+                    isinstance(parser, Parser),
+                    isinstance(once, bool)):
+                raise TypeError()
+
+            self.parser = parser
+            self.onlyOnce = once
+
+        def parse(self, lexer, res):
+            if not all(
+                    isinstance(lexer, Lexer),
+                    isinstance(res, ASTree)):
+                raise TypeError()
+
+            while self.parser.match(lexer):
+                t = self.parser.parse(lexer)
+                if instanceof(t, ASTList) or t.numChildren() > 0:
+                    res.add(t)
+                if self.onlyOnce:
+                    break
+
+        def match(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
+            return self.parser.match(lexer)
+
+    # 终结符父类
+    class AToken(Element):
+        def __init__(self, t):
+            self.factory = Factory()
+            if t is None:
+                t = eval(ASTLeaf.__name__)
+                factory = self.factory.get(t, StoneToken.__name__)
+
+        def parse(self, lexer, res):
+            if not all(
+                    isinstance(lexer, Lexer),
+                    isinstance(res, ASTree)):
+                raise TypeError()
+
+            t = lexer.read()
+            if self.test(t):
+                #leaf = self.factory.make(t) # 根据符号创建语法树对象
+                res.add(leaf)
+            else:
+                raise parseException(t)
+
+        def match(self, lexer):
+            return self.test(lexer.peek(0))
+
+        # 验证符号是否为该类型
+        @abstractmethod
+        def test(self, t):
+            pass
+
+    # ID终结符
+    class IdToken(AToken):
+        def __init__(self, t, r):
+            #super(IdToken, self).__init__(t)
+            self.reserved = r if r != None else dict()
+
+        def test(self, t):
+            return t.isIdentifier() and not t.getText() in self.reserved
+
+    # 数值终结符
+    class NumToken(AToken):
+        def __init__(self, t):
+            pass
+            #super(NumToken, self).__init__(t)
+
+        def test(self, t):
+            return t.isNumber()
+
+    # 字符串终结符
+    class StrToken(AToken):
+        def __init__(self, t):
+            pass
+            #super(StrToken, self).__init__(t)
+
+        def test(self, t):
+            return t.isString()
+
+    class Factory():
+        def __init__(self, clazz):
+            self.clazz = clazz
+
+        def make(self, *args):
+            try:
+                return self.make0(*args)
+            except ValueError as e:
+                raise e
+            except Exception as e:
+                raise RuntimeError(e)
+
+        def make0(self, *args):
+            try:
+                # 使用create方法创建instance
+                if 'create' in self.clazz.__dict__.keys(): # 检测类是否有create方法
+                    instance = self.clazz.create(*args)
+                    return instance
+
+                # 实现getForASTList
+                if isinstance(args[0], list) and all([isinstance(item, ASTree) for item in args[0]]):
+                    if len(args[0]) == 1:
+                        return args[0][0]
+                    else:
+                        return ASTList(args[0])
+
+                # 使用默认构造函数创建instance
+                instance = self.clazz(*args)
+                return instance
+
+            # 出现错误
+            except Exception as e:
+                raise RuntimeError(e)
+
+        @staticmethod
+        def get(clazzName):
+            if clazzName is None:
+                return None
+            else:
+                return Parser.Factory(clazzName)
+
+        @staticmethod
+        def getForASTList(clazzName):
+            return Parser.Factory.get(clazzName)
+
+if __name__ == '__main__':
+    f = Parser.Factory.get('hello')
+    f.make(1, 2, 3)
+
 '''
+    def __init__(self, p=None):
+        if p is None:
+            self.reset() # clazz
+        else: # p is Parser instance
+            if not isinstance(p, Parser):
+                raise TypeError()
+
+            self.elements = p.elements
+            self.factory = p.factory
+
+    def parse(self, lexer):
+        if not isinstance(lexer, Lexer):
+            raise TypeError()
+
+        results = list()
+        for e in self.elements:
+            e.parse(lexer, results)
+
+        return self.factory.make(results)
+
+    def match(self, lexer):
+        if not isinstance(lexer, Lexer):
+            raise TypeError()
+
+        if (len(self.elements)) == 0:
+            return True
+        else:
+            e = self.elements.get(0)
+            return e.match(lexer)
+
+    def rule(self, clazz=None):
+        if clazz is None:
+            return rule(None)
+        else:
+            return Parser(clazz)
+
+    def reset(self, clazz):
+        if clazz is None:
+            self.elements = list()
+            return self
+        else:
+            self.elements = list()
+            self.factory = Factory.getForASTList(clazz)
+            return self
+
+if __name__ == '__main__':
+    print(globals())
+
+    # 合法输入
+    #print('parsing expression.stone')
+    #with open("samples/expression.stone", 'r') as f:
+        #reader = LineReader(f)
+        #lexer = Lexer(reader)
+        #res = ASTree()
+        #atoken = Parser.ANumToken()
+        #atoken.parse(lexer, res)
+
+        #print("=> %s" % (res))
+
+    # 非法输入 应该产生ParseException
+    #print('parsing expression_parseexception.stone')
+    #with open("samples/expression_parseexception.stone", 'r') as f:
+        #reader = LineReader(f)
+        #lexer = Lexer(reader)
+        ##token = lexer.read()
+        ##if token != None: print(token.getText())
+        ##while token != StoneToken.EOF:
+            ##token = lexer.read()
+            ##if token != None: print(token.getText())
+        #p = OpPrecedenceParser(lexer)
+
+        #t = p.expression()
+        #print("=> %s" % (t))
+
+
 from parseException import ParseException
 from astList import ASTList
 from astLeaf import ASTLeaf
-
-class OrTree(Element):
-    def __init__(self, p):
-        self.parsers = p
-
-    def parse(self, lexer, res):
-        p = self.choose(lexer)
-        if p == None:
-            raise ParseException(lexer.peek(0))
-        else:
-            res.add(p.parse(lexer))
-
-    def match(self, lexer):
-        return self.choose(lexer) != None
-
-    def choose(self, lexer):
-        for p in self.parsers:
-            if p.match(lexer):
-                return p
-        return None
-
-    def insert(self, p):
-        self.parsers = [p] + self.parsers
-
-class Repeat(Element):
-    def __init__(self, p, once):
-        self.parser = p
-        self.onlyOnce = once
-
-    def parse(self, lexer, res):
-        while self.parser.match(lexer):
-            t = self.parser.parse(lexer)
-            if instanceof(t, ASTList) or t.numChildren() > 0:
-                res.add(t)
-            if self.onlyOnce:
-                break
-
-    def match(self, lexer):
-        return self.parser.match(lexer)
-
-class AToken(Element):
-    def __init__(self, t):
-        self.factory = Factory()
-        if t is None:
-            t = eval(ASTLeaf.__name__)
-            factory = self.factory.get(t, StoneToken.__name__)
-
-    def parse(self, lexer, res):
-        t = lexer.read()
-        if self.test(t):
-            leaf = self.factory.make(t)
-            res.add(leaf)
-        else:
-            raise parseException(t)
-
-    def match(self, lexer):
-        return self.test(lexer.peek(0))
-
-    def test(self, t):
-        pass
-
-class AIdToken(AToken):
-    def __init__(self, t, r):
-        super(AIdToken, self).__init__(t)
-        self.reserved = r if r != None else dict()
-
-    def test(self, t):
-        return t.isIdentifier() and not t.getText() in self.reserved
-
-class ANumToken(AToken):
-    def __init__(self, t):
-        super(ANumToken, self).__init__(t)
-
-    def test(self, t):
-        return t.isNumber();
-
-class AStrToken(AToken):
-    def __init__(self, t):
-        super(AStrToken, self).__init__(t)
-
-    def test(self, t):
-        return t.isString()
-
 class Leaf(Element):
     def __init__(self, pat):
         self.tokens = pat
