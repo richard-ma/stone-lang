@@ -167,6 +167,7 @@ class Parser():
         def test(self, t):
             return t.isString()
 
+    # 创建ASTree类型及子类型的工厂
     class Factory():
         def __init__(self, clazz):
             self.clazz = clazz
@@ -212,21 +213,39 @@ class Parser():
         def getForASTList(clazzName):
             return Parser.Factory.get(clazzName)
 
-if __name__ == '__main__':
-    f = Parser.Factory.get('hello')
-    f.make(1, 2, 3)
-
-'''
-    def __init__(self, p=None):
-        if p is None:
-            self.reset() # clazz
-        else: # p is Parser instance
-            if not isinstance(p, Parser):
-                raise TypeError()
-
+###############################################################################
+# Class Parse Method
+###############################################################################
+    def __init__(self, arg):
+        if isinstance(arg, Parser):
+            p = arg
             self.elements = p.elements
             self.factory = p.factory
+        elif isinstance(arg, type):
+            clazz = arg
+            self.reset(clazz)
+        else:
+            raise TypeError()
 
+    def reset(self, clazz=None):
+        if clazz is None:
+            self.elements = list()
+            return self
+        elif isinstance(clazz, type):
+            self.elements = list()
+            self.factory = Parser.Factory.getForASTList(clazz)
+            return self
+        else:
+            raise TypeError()
+
+###############################################################################
+# Class Parse Method End
+###############################################################################
+
+if __name__ == '__main__':
+    print(dir(Parser).__dict__)
+
+'''
     def parse(self, lexer):
         if not isinstance(lexer, Lexer):
             raise TypeError()
@@ -252,15 +271,6 @@ if __name__ == '__main__':
             return rule(None)
         else:
             return Parser(clazz)
-
-    def reset(self, clazz):
-        if clazz is None:
-            self.elements = list()
-            return self
-        else:
-            self.elements = list()
-            self.factory = Factory.getForASTList(clazz)
-            return self
 
 if __name__ == '__main__':
     print(globals())

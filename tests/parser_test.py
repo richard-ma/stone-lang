@@ -129,6 +129,26 @@ class TestParser_Factory(unittest.TestCase):
         self.assertIsInstance(instance, ASTree)
         self.assertIsInstance(instance, ASTList)
 
+class TestParser(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        p = Parser(NumberLiteral)
+        self.assertIsInstance(p.elements, list)
+        self.assertIsInstance(p.factory, Parser.Factory)
+        self.assertEqual(0, len(p.elements))
+
+        q = Parser(p)
+        self.assertIsInstance(q.elements, list)
+        self.assertIsInstance(q.factory, Parser.Factory)
+        self.assertEqual(0, len(q.elements))
 
 if __name__ == '__main__':
     unittest.main()
