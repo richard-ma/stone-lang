@@ -25,4 +25,4 @@ if __name__ == '__main__':
         raise ParseException(nt, "[error message]")
     except ParseException as e:
         print(e)
-        raise
+        print(e.location(nt))
