@@ -94,11 +94,6 @@ if __name__ == '__main__':
     with open("samples/expression.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
-        #token = lexer.read()
-        #if token != None: print(token.getText())
-        #while token != StoneToken.EOF:
-            #token = lexer.read()
-            #if token != None: print(token.getText())
         p = OpPrecedenceParser(lexer)
 
         t = p.expression()
@@ -109,11 +104,6 @@ if __name__ == '__main__':
     with open("samples/expression_parseexception.stone", 'r') as f:
         reader = LineReader(f)
         lexer = Lexer(reader)
-        #token = lexer.read()
-        #if token != None: print(token.getText())
-        #while token != StoneToken.EOF:
-            #token = lexer.read()
-            #if token != None: print(token.getText())
         p = OpPrecedenceParser(lexer)
 
         t = p.expression()
