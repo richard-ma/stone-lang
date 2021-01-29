@@ -23,8 +23,8 @@ class StoneToken():
         return False
 
     # 只有NumToken才有这个方法
-    #def getNumber(self):
-        #raise StoneException("not number token")
+    def getNumber(self):
+        raise StoneException("not number token")
 
     def getText(self):
         return ""
@@ -37,4 +37,4 @@ if __name__ == '__main__':
     print(t.isNumber())
     print(t.isString())
     print(t.getText())
-    #print(t.getNumber())
+    print(t.getNumber())

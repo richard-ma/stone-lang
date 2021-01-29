@@ -5,6 +5,7 @@ import unittest
 from random import randint
 
 from lib.stoneToken import StoneToken
+from lib.stoneException import StoneException
 
 class TestStoneToken(unittest.TestCase):
 
@@ -32,3 +33,5 @@ class TestStoneToken(unittest.TestCase):
     def test_getText(self):
         self.assertEqual(self.token.getText(), "")
 
+    def test_getNumber(self):
+        self.assertRaises(StoneException)
