@@ -186,7 +186,7 @@ class Parser():
                 raise RuntimeError(e)  # compiler ERROR
 
         @staticmethod
-        def get(cls): # python not have arguments for method rewrite
+        def get(cls): # python don't need arguments of method rewrite
             if not issubclass(cls, ASTree):
                 raise TypeError()
 
@@ -223,7 +223,7 @@ class Parser():
 
         @staticmethod
         def getForASTList(cls):
-            f = Parser.Factory.get(cls, list)
+            f = Parser.Factory.get(cls)
 
             if f is None:
                 def make0(self, arg):

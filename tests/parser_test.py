@@ -120,21 +120,23 @@ class TestParser_Factory(unittest.TestCase):
 
     def test_get(self):
         factory = Parser.Factory.get(ASTLeaf)
-        instance = factory.make(self.stoneToken)
+        instance = factory.make(self.numToken)
         self.assertIsInstance(instance, ASTree)
 
-        # instance = Parser.Factory.get(Name, self.strToken)
-        # self.assertIsInstance(instance, ASTree)
-        # self.assertEqual(instance.name(), self.text)
+        factory = Parser.Factory.get(ASTLeaf)
+        instance = factory.make(self.strToken)
+        self.assertIsInstance(instance, ASTree)
 
     def test_getForASTList(self):
-        instance = Parser.Factory.getForASTList(ASTList).make([NumberLiteral(self.numToken)])
+        # only one item in list
+        factory = Parser.Factory.getForASTList(ASTList)
+        instance = factory.make(self.numToken)
         self.assertIsInstance(instance, ASTree)
-        self.assertIsInstance(instance, NumberLiteral)
 
-        instance = Parser.Factory.getForASTList(ASTList).make([NumberLiteral(self.numToken), Name(self.strToken)])
+        # many items in list
+        factory = Parser.Factory.getForASTList(ASTList)
+        instance = factory.make([self.numToken, self.strToken])
         self.assertIsInstance(instance, ASTree)
-        self.assertIsInstance(instance, ASTList)
 
 class TestParser(unittest.TestCase):
 
