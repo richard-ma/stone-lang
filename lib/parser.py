@@ -229,9 +229,9 @@ class Parser():
                 def make0(self, arg):
                     results = arg
                     if len(results) == 1:
-                        results.get(0)
+                        return results.get(0)
                     else:
-                        return ASTList(results)  # deep copy results
+                        return ASTList(results)
 
                 f = Parser.Factory()
                 f.make0 = make0.__get__(f, Parser.Factory)
@@ -247,8 +247,8 @@ class Parser():
             self.elements = p.elements
             self.factory = p.factory
         elif issubclass(arg, ASTree):
-            clazz = arg
-            self.reset(clazz)
+            cls = arg
+            self.reset(cls)
         else:
             raise TypeError()
 

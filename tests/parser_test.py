@@ -130,7 +130,7 @@ class TestParser_Factory(unittest.TestCase):
     def test_getForASTList(self):
         # only one item in list
         factory = Parser.Factory.getForASTList(ASTList)
-        instance = factory.make(self.numToken)
+        instance = factory.make([self.numToken])
         self.assertIsInstance(instance, ASTree)
 
         # many items in list
