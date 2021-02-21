@@ -81,6 +81,9 @@ class TestParser_AToken(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_init(self):
+        atoken = AToken()
+
 class TestParser_IdToken(unittest.TestCase):
 
     """Test case docstring."""
@@ -134,21 +137,32 @@ class TestParser(unittest.TestCase):
     """Test case docstring."""
 
     def setUp(self):
-        pass
+        self.p = Parser(NumberLiteral)
+        self.q = Parser(self.p)
 
     def tearDown(self):
         pass
 
-    def test_init(self):
-        p = Parser(NumberLiteral)
-        self.assertIsInstance(p.elements, list)
-        self.assertIsInstance(p.factory, Parser.Factory)
-        self.assertEqual(0, len(p.elements))
+    def test_init_with_ASTree_subclass(self):
+        self.assertIsInstance(self.p.elements, list)
+        self.assertIsInstance(self.p.factory, Parser.Factory)
+        self.assertEqual(0, len(self.p.elements))
 
-        q = Parser(p)
-        self.assertIsInstance(q.elements, list)
-        self.assertIsInstance(q.factory, Parser.Factory)
-        self.assertEqual(0, len(q.elements))
+    def test_init_with_Parser(self):
+        self.assertIsInstance(self.q.elements, list)
+        self.assertIsInstance(self.q.factory, Parser.Factory)
+        self.assertEqual(0, len(self.q.elements))
+
+    def test_reset_with_none(self):
+        ret = self.p.reset()  # invoke reset
+        self.assertIsInstance(ret, Parser)  # return type is Parser
+        self.assertEqual(0, len(self.p.elements))
+
+    def test_reset_with_ASTree_subclass(self):
+        ret = self.p.reset(NumberLiteral)  # invoke reset
+        self.assertIsInstance(ret, Parser)  # return type is Parser
+        self.assertEqual(0, len(self.p.elements))
+        self.assertIsInstance(self.p.factory)
 
 if __name__ == '__main__':
     unittest.main()

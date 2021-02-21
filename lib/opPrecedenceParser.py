@@ -7,12 +7,12 @@ from lib.astLeaf import ASTLeaf
 from lib.binaryExpr import BinaryExpr
 from lib.numberLiteral import NumberLiteral
 
-class OpPrecedenceParser():
 
+class OpPrecedenceParser():
     class Precedence:
         def __init__(self, v, a):
-            self.value = v # 优先级，数字越大优先级越高
-            self.leftAssoc = a # 该运算符是否为左结合
+            self.value = v  # 优先级，数字越大优先级越高
+            self.leftAssoc = a  # 该运算符是否为左结合
 
     def __init__(self, p):
         self.lexer = p
@@ -27,7 +27,7 @@ class OpPrecedenceParser():
         self.operators["^"] = self.Precedence(4, False)
 
     def expression(self):
-        right = self.factor() # 第一个终结符
+        right = self.factor()  # 第一个终结符
         next = self.nextOperator()
         while next != None:
             right = self.doShift(right, next.value)
@@ -36,9 +36,9 @@ class OpPrecedenceParser():
         return right
 
     def doShift(self, left, prec):
-        op = ASTLeaf(self.lexer.read()) # 读入操作符
-        right = self.factor() # 读入右侧的factor
-        next = self.nextOperator() # 获得下一个操作符
+        op = ASTLeaf(self.lexer.read())  # 读入操作符
+        right = self.factor()  # 读入右侧的factor
+        next = self.nextOperator()  # 获得下一个操作符
         while next != None and self.rightIsExpr(prec, next):
             right = self.doShift(right, next.value)
             next = self.nextOperator()
@@ -47,30 +47,30 @@ class OpPrecedenceParser():
 
     # 如果下一个词是操作符，返回操作符的优先级和结合性，如果不是则返回None
     def nextOperator(self):
-        t = self.lexer.peek(0) # 获取下一个词
-        if t.isIdentifier(): # 是标识符的话，返回标识符的优先级和结合性质
+        t = self.lexer.peek(0)  # 获取下一个词
+        if t.isIdentifier():  # 是标识符的话，返回标识符的优先级和结合性质
             return self.operators.get(t.getText())
         else:
-            return None # 返回None说明不是操作符
+            return None  # 返回None说明不是操作符
 
     # 判断右侧是否为表达式
     def rightIsExpr(self, prec, nextPrec):
         if nextPrec.leftAssoc:
-            return prec < nextPrec.value # 2 + 3 * 5: 3 * 5是一个右侧的表达式
+            return prec < nextPrec.value  # 2 + 3 * 5: 3 * 5是一个右侧的表达式
         else:
-            return prec <= nextPrec.value # 2 ^ 3 ^ 7: ^幂运算符是右结合的，所以这时候右侧(3 ^ 7)是表达式
+            return prec <= nextPrec.value  # 2 ^ 3 ^ 7: ^幂运算符是右结合的，所以这时候右侧(3 ^ 7)是表达式
 
     # 数字或括号为终结符
     def factor(self):
-        if self.isToken("("): # "(" expression ")"
+        if self.isToken("("):  # "(" expression ")"
             self.token("(")
-            e = self.expression() # 打开括号，计算表达式的值并作为结果返回
+            e = self.expression()  # 打开括号，计算表达式的值并作为结果返回
             self.token(")")
             return e
-        else: # NUMBER
+        else:  # NUMBER
             t = self.lexer.read()
             if t.isNumber():
-                n = NumberLiteral(t) # 直接返回对应的数字
+                n = NumberLiteral(t)  # 直接返回对应的数字
                 return n
             else:
                 raise ParseException(t)
@@ -88,7 +88,6 @@ class OpPrecedenceParser():
 
 
 if __name__ == '__main__':
-
     # 合法输入
     print('parsing expression.stone')
     with open("samples/expression.stone", 'r') as f:
@@ -108,5 +107,3 @@ if __name__ == '__main__':
 
         t = p.expression()
         print("=> %s" % (t))
-
-

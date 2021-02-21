@@ -42,7 +42,7 @@ class Parser():
 
     class OrTree(Element):
         def __init__(self, parsers):
-            if not isinstance(parsers, Parser):
+            if not isinstance(parsers, list):
                 raise TypeError()
 
             self.parsers = parsers
@@ -100,7 +100,7 @@ class Parser():
 
             while self.parser.match(lexer):
                 t = self.parser.parse(lexer)
-                if instanceof(t, ASTList) or t.numChildren() > 0:
+                if isinstance(t, ASTList) or t.numChildren() > 0:
                     res.add(t)
                 if self.onlyOnce:
                     break
@@ -122,7 +122,7 @@ class Parser():
         def parse(self, lexer, res):
             if not all(
                     isinstance(lexer, Lexer),
-                    isinstance(res, ASTree)):
+                    isinstance(res, list)):
                 raise TypeError()
 
             t = lexer.read()
@@ -203,7 +203,7 @@ class Parser():
                 raise RuntimeError(e)
 
         @staticmethod
-        def get(clazzName):
+        def get(clazzName, argType):
             if clazzName is None:
                 return None
             else:
@@ -214,38 +214,19 @@ class Parser():
             return Parser.Factory.get(clazzName)
 
 ###############################################################################
-# Class Parse Method
+# Class Parser Method
 ###############################################################################
     def __init__(self, arg):
         if isinstance(arg, Parser):
             p = arg
             self.elements = p.elements
             self.factory = p.factory
-        elif isinstance(arg, type):
+        elif issubclass(arg, ASTree):
             clazz = arg
             self.reset(clazz)
         else:
             raise TypeError()
 
-    def reset(self, clazz=None):
-        if clazz is None:
-            self.elements = list()
-            return self
-        elif isinstance(clazz, type):
-            self.elements = list()
-            self.factory = Parser.Factory.getForASTList(clazz)
-            return self
-        else:
-            raise TypeError()
-
-###############################################################################
-# Class Parse Method End
-###############################################################################
-
-if __name__ == '__main__':
-    print(dir(Parser).__dict__)
-
-'''
     def parse(self, lexer):
         if not isinstance(lexer, Lexer):
             raise TypeError()
@@ -256,6 +237,31 @@ if __name__ == '__main__':
 
         return self.factory.make(results)
 
+    def reset(self, clazz=None):
+        if clazz is None:
+            self.elements = list()
+            return self
+        elif issubclass(clazz, ASTree):
+            self.elements = list()
+            self.factory = Parser.Factory.getForASTList(clazz)
+            return self
+        else:
+            raise TypeError()
+
+    def rule(self, clazz=None):
+        if clazz is None:
+            return rule()
+        else:
+            return Parser(clazz)
+
+###############################################################################
+# Class Parser Method End
+###############################################################################
+
+if __name__ == '__main__':
+    print(dir(Parser).__dict__)
+
+'''
     def match(self, lexer):
         if not isinstance(lexer, Lexer):
             raise TypeError()
@@ -265,12 +271,6 @@ if __name__ == '__main__':
         else:
             e = self.elements.get(0)
             return e.match(lexer)
-
-    def rule(self, clazz=None):
-        if clazz is None:
-            return rule(None)
-        else:
-            return Parser(clazz)
 
 if __name__ == '__main__':
     print(globals())
