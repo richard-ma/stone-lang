@@ -186,7 +186,7 @@ class Parser():
                 raise RuntimeError(e)  # compiler ERROR
 
         @staticmethod
-        def get(cls): # python don't need arguments of method rewrite
+        def get(cls):  # python don't need arguments of method rewrite
             if not issubclass(cls, ASTree):
                 raise TypeError()
 
@@ -231,24 +231,12 @@ class Parser():
                     if len(results) == 1:
                         results.get(0)
                     else:
-                        return ASTList(results) # deep copy results
+                        return ASTList(results)  # deep copy results
 
                 f = Parser.Factory()
                 f.make0 = make0.__get__(f, Parser.Factory)
 
             return f
-
-
-if __name__ == '__main__':
-    from lib.astLeaf import ASTLeaf
-    from lib.stoneToken import StoneToken
-
-    f = Parser.Factory.get(ASTLeaf, StoneToken)
-    print(f)
-
-    from lib.binaryExpr import BinaryExpr
-    f = Parser.Factory.getForASTList(BinaryExpr)
-
 
     ###############################################################################
     # Class Parser Method
@@ -264,7 +252,6 @@ if __name__ == '__main__':
         else:
             raise TypeError()
 
-
     def parse(self, lexer):
         if not isinstance(lexer, Lexer):
             raise TypeError()
@@ -274,7 +261,6 @@ if __name__ == '__main__':
             e.parse(lexer, results)
 
         return self.factory.make(results)
-
 
     def reset(self, clazz=None):
         if clazz is None:
@@ -287,12 +273,12 @@ if __name__ == '__main__':
         else:
             raise TypeError()
 
-
     def rule(self, clazz=None):
         if clazz is None:
             return rule()
         else:
             return Parser(clazz)
+
 
 ###############################################################################
 # Class Parser Method End
