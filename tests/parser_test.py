@@ -107,6 +107,7 @@ class TestParser_Factory(unittest.TestCase):
         self.lineNumber = 1
         self.value = 33
         self.text = "text"
+        self.stoneToken = StoneToken(self.lineNumber)
         self.idToken = IdToken(self.lineNumber, self.text)
         self.strToken = StrToken(self.lineNumber, self.text)
         self.numToken = NumToken(self.lineNumber, self.value)
@@ -118,13 +119,13 @@ class TestParser_Factory(unittest.TestCase):
         self.assertNotEqual(Parser.Factory.FACTORY_NAME, None)
 
     def test_get(self):
-        instance = Parser.Factory.get(NumberLiteral).make(self.numToken)
+        factory = Parser.Factory.get(ASTLeaf)
+        instance = factory.make(self.stoneToken)
         self.assertIsInstance(instance, ASTree)
-        self.assertEqual(instance.value(), self.value)
 
-        instance = Parser.Factory.get(Name).make(self.strToken)
-        self.assertIsInstance(instance, ASTree)
-        self.assertEqual(instance.name(), self.text)
+        # instance = Parser.Factory.get(Name, self.strToken)
+        # self.assertIsInstance(instance, ASTree)
+        # self.assertEqual(instance.name(), self.text)
 
     def test_getForASTList(self):
         instance = Parser.Factory.getForASTList(ASTList).make([NumberLiteral(self.numToken)])

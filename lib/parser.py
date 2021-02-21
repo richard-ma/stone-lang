@@ -2,10 +2,12 @@
 # encoding: utf-8
 
 from abc import *
+from types import FunctionType
 
 from lib.lexer import *
 from lib.astree import *
 from lib.astList import *
+
 
 class Parser():
     # 基类
@@ -114,7 +116,7 @@ class Parser():
     # 终结符父类
     class AToken(Element):
         def __init__(self, t):
-            self.factory = Factory()
+            self.factory = Parser.Factory()
             if t is None:
                 t = eval(ASTLeaf.__name__)
                 factory = self.factory.get(t, StoneToken.__name__)
@@ -127,10 +129,10 @@ class Parser():
 
             t = lexer.read()
             if self.test(t):
-                #leaf = self.factory.make(t) # 根据符号创建语法树对象
+                leaf = self.factory.make(t)  # 根据符号创建语法树对象
                 res.add(leaf)
             else:
-                raise parseException(t)
+                raise ParseException(t)
 
         def match(self, lexer):
             return self.test(lexer.peek(0))
@@ -143,7 +145,7 @@ class Parser():
     # ID终结符
     class IdToken(AToken):
         def __init__(self, t, r):
-            #super(IdToken, self).__init__(t)
+            # super(IdToken, self).__init__(t)
             self.reserved = r if r != None else dict()
 
         def test(self, t):
@@ -153,7 +155,7 @@ class Parser():
     class NumToken(AToken):
         def __init__(self, t):
             pass
-            #super(NumToken, self).__init__(t)
+            # super(NumToken, self).__init__(t)
 
         def test(self, t):
             return t.isNumber()
@@ -162,7 +164,7 @@ class Parser():
     class StrToken(AToken):
         def __init__(self, t):
             pass
-            #super(StrToken, self).__init__(t)
+            # super(StrToken, self).__init__(t)
 
         def test(self, t):
             return t.isString()
@@ -171,53 +173,86 @@ class Parser():
     class Factory():
         FACTORY_NAME = 'create'
 
-        def __init__(self, clazz):
-            self.clazz = clazz
+        @abstractmethod
+        def make0(self, arg):
+            pass
 
-        def make(self, *args):
+        def make(self, arg):
             try:
-                return self.make0(*args)
+                return self.make0(arg)
             except ValueError as e:
                 raise e
             except Exception as e:
-                raise RuntimeError(e)
+                raise RuntimeError(e)  # compiler ERROR
 
-        def make0(self, *args):
+        @staticmethod
+        def get(cls): # python not have arguments for method rewrite
+            if not issubclass(cls, ASTree):
+                raise TypeError()
+
+            if cls is None:
+                return None
+
             try:
                 # 使用create方法创建instance
-                if 'create' in self.clazz.__dict__.keys(): # 检测类是否有create方法
-                    instance = self.clazz.create(*args)
-                    return instance
+                m = getattr(cls, Parser.Factory.FACTORY_NAME)
 
-                # 实现getForASTList
-                if isinstance(args[0], list) and all([isinstance(item, ASTree) for item in args[0]]):
-                    if len(args[0]) == 1:
-                        return args[0][0]
-                    else:
-                        return ASTList(args[0])
+                def make0(self, arg):
+                    return m(arg)
 
-                # 使用默认构造函数创建instance
-                instance = self.clazz(*args)
-                return instance
+                f = Parser.Factory()
+                f.make0 = make0.__get__(f, Parser.Factory)  # bind make0 to f instance
 
-            # 出现错误
+                return f
+
+            except AttributeError:  # not found method which named create in argType class
+                pass
+
+            # use default constructor
+            try:
+                def make0(self, arg):
+                    return cls(arg)
+
+                f = Parser.Factory()
+                f.make0 = make0.__get__(f, Parser.Factory)
+
+                return f
+
             except Exception as e:
                 raise RuntimeError(e)
 
         @staticmethod
-        def get(clazzName, argType):
-            if clazzName is None:
-                return None
-            else:
-                return Parser.Factory(clazzName)
+        def getForASTList(cls):
+            f = Parser.Factory.get(cls, list)
 
-        @staticmethod
-        def getForASTList(clazzName):
-            return Parser.Factory.get(clazzName)
+            if f is None:
+                def make0(self, arg):
+                    results = arg
+                    if len(results) == 1:
+                        results.get(0)
+                    else:
+                        return ASTList(results) # deep copy results
 
-###############################################################################
-# Class Parser Method
-###############################################################################
+                f = Parser.Factory()
+                f.make0 = make0.__get__(f, Parser.Factory)
+
+            return f
+
+
+if __name__ == '__main__':
+    from lib.astLeaf import ASTLeaf
+    from lib.stoneToken import StoneToken
+
+    f = Parser.Factory.get(ASTLeaf, StoneToken)
+    print(f)
+
+    from lib.binaryExpr import BinaryExpr
+    f = Parser.Factory.getForASTList(BinaryExpr)
+
+
+    ###############################################################################
+    # Class Parser Method
+    ###############################################################################
     def __init__(self, arg):
         if isinstance(arg, Parser):
             p = arg
@@ -229,6 +264,7 @@ class Parser():
         else:
             raise TypeError()
 
+
     def parse(self, lexer):
         if not isinstance(lexer, Lexer):
             raise TypeError()
@@ -238,6 +274,7 @@ class Parser():
             e.parse(lexer, results)
 
         return self.factory.make(results)
+
 
     def reset(self, clazz=None):
         if clazz is None:
@@ -250,6 +287,7 @@ class Parser():
         else:
             raise TypeError()
 
+
     def rule(self, clazz=None):
         if clazz is None:
             return rule()
@@ -259,9 +297,6 @@ class Parser():
 ###############################################################################
 # Class Parser Method End
 ###############################################################################
-
-if __name__ == '__main__':
-    print(dir(Parser).__dict__)
 
 '''
     def match(self, lexer):
