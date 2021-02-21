@@ -169,6 +169,8 @@ class Parser():
 
     # 创建ASTree类型及子类型的工厂
     class Factory():
+        FACTORY_NAME = 'create'
+
         def __init__(self, clazz):
             self.clazz = clazz
 

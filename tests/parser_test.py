@@ -114,6 +114,9 @@ class TestParser_Factory(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_FACTORYNAME_not_none(self):
+        self.assertNotEqual(Parser.Factory.FACTORY_NAME, None)
+
     def test_get(self):
         instance = Parser.Factory.get(NumberLiteral).make(self.numToken)
         self.assertIsInstance(instance, ASTree)
