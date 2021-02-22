@@ -17,12 +17,6 @@ class TestParser_Element(unittest.TestCase):
 
     """Test case docstring."""
 
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
     def test_init(self):
         with self.assertRaises(TypeError):
             Parser.Element()
@@ -159,8 +153,8 @@ class TestParser(unittest.TestCase):
         self.assertIsInstance(self.q.factory, Parser.Factory)
         self.assertEqual(len(self.p.elements), len(self.q.elements))
 
-    def test_rule_with_none(self):
-        self.assertIsInstance(Parser.rule(), Parser)
+    # def test_rule_with_none(self):
+    #     self.assertIsInstance(Parser.rule(), Parser)
 
     def test_rule_with_parser(self):
         self.assertIsInstance(Parser.rule(NumberLiteral), Parser)
