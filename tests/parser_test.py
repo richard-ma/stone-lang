@@ -157,7 +157,7 @@ class TestParser(unittest.TestCase):
     def test_init_with_Parser(self):
         self.assertIsInstance(self.q.elements, list)
         self.assertIsInstance(self.q.factory, Parser.Factory)
-        self.assertEqual(0, len(self.q.elements))
+        self.assertEqual(len(self.p.elements), len(self.q.elements))
 
     def test_reset_with_none(self):
         ret = self.p.reset()  # invoke reset
@@ -168,7 +168,7 @@ class TestParser(unittest.TestCase):
         ret = self.p.reset(NumberLiteral)  # invoke reset
         self.assertIsInstance(ret, Parser)  # return type is Parser
         self.assertEqual(0, len(self.p.elements))
-        self.assertIsInstance(self.p.factory)
+        self.assertIsInstance(self.p.factory, Parser.Factory)
 
 if __name__ == '__main__':
     unittest.main()

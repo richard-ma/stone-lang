@@ -262,22 +262,22 @@ class Parser():
 
         return self.factory.make(results)
 
-    def reset(self, clazz=None):
-        if clazz is None:
-            self.elements = list()
-            return self
-        elif issubclass(clazz, ASTree):
-            self.elements = list()
-            self.factory = Parser.Factory.getForASTList(clazz)
-            return self
-        else:
-            raise TypeError()
-
     def rule(self, clazz=None):
         if clazz is None:
             return rule()
         else:
             return Parser(clazz)
+
+    def reset(self, cls=None):
+        if cls is None:
+            self.elements = list()
+            return self
+        elif issubclass(cls, ASTree):
+            self.elements = list()
+            self.factory = Parser.Factory.getForASTList(cls)
+            return self
+        else:
+            raise TypeError()
 
 
 ###############################################################################
