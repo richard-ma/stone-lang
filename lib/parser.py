@@ -262,11 +262,13 @@ class Parser():
 
         return self.factory.make(results)
 
-    def rule(self, clazz=None):
-        if clazz is None:
-            return rule()
+    @staticmethod
+    def rule(cls=None):
+        if issubclass(cls, ASTree):
+            return Parser(cls)
         else:
-            return Parser(clazz)
+            raise TypeError()
+
 
     def reset(self, cls=None):
         if cls is None:

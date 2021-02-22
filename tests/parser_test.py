@@ -159,6 +159,12 @@ class TestParser(unittest.TestCase):
         self.assertIsInstance(self.q.factory, Parser.Factory)
         self.assertEqual(len(self.p.elements), len(self.q.elements))
 
+    def test_rule_with_none(self):
+        self.assertIsInstance(Parser.rule(), Parser)
+
+    def test_rule_with_parser(self):
+        self.assertIsInstance(Parser.rule(NumberLiteral), Parser)
+
     def test_reset_with_none(self):
         ret = self.p.reset()  # invoke reset
         self.assertIsInstance(ret, Parser)  # return type is Parser
