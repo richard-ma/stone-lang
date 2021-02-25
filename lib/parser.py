@@ -263,7 +263,6 @@ class Parser():
         else:
             raise TypeError()
 
-
     def reset(self, cls=None):
         if cls is None:
             self.elements = list()
