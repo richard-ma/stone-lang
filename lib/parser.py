@@ -25,21 +25,12 @@ class Parser():
         def __init__(self, parser):
             if not isinstance(parser, Parser):
                 raise TypeError()
-
             self.parser = parser
 
-        def parse(self, lexer, res):
-            if not all(
-                    isinstance(lexer, Lexer),
-                    isinstance(res, ASTree)):
-                raise TypeError()
-
+        def parse(self, lexer: Lexer, res: ASTree):
             res.add(self.parser.parse(lexer))
 
-        def match(self, lexer):
-            if not isinstance(lexer, Lexer):
-                raise TypeError()
-
+        def match(self, lexer: Lexer):
             return self.parser.match(lexer)
 
     class OrTree(Element):
@@ -242,7 +233,10 @@ class Parser():
     # Class Parser Method
     ###############################################################################
     def __init__(self, arg):
-        if isinstance(arg, Parser):
+        if arg is None:
+            cls = arg
+            self.reset(cls)
+        elif isinstance(arg, Parser):
             p = arg
             self.elements = p.elements
             self.factory = p.factory
@@ -264,13 +258,13 @@ class Parser():
 
     @staticmethod
     def rule(cls=None):
-        if issubclass(cls, ASTree):
+        if issubclass(cls, ASTree) or cls is None:
             return Parser(cls)
         else:
             raise TypeError()
 
 
-    def reset(self, cls=None):
+    def reset(self, cls):
         if cls is None:
             self.elements = list()
             return self

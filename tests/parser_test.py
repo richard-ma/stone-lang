@@ -26,7 +26,8 @@ class TestParser_Tree(unittest.TestCase):
     """Test case docstring."""
 
     def setUp(self):
-        pass
+        self.parser = Parser(ASTList)
+        self.tree = Parser.Tree(self.parser)
 
     def tearDown(self):
         pass
@@ -143,6 +144,11 @@ class TestParser(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_init_with_None(self):
+        parser = Parser(None)
+        self.assertIsInstance(parser.elements, list)
+        self.assertEqual(0, len(parser.elements))
+
     def test_init_with_ASTree_subclass(self):
         self.assertIsInstance(self.p.elements, list)
         self.assertIsInstance(self.p.factory, Parser.Factory)
@@ -153,8 +159,8 @@ class TestParser(unittest.TestCase):
         self.assertIsInstance(self.q.factory, Parser.Factory)
         self.assertEqual(len(self.p.elements), len(self.q.elements))
 
-    # def test_rule_with_none(self):
-    #     self.assertIsInstance(Parser.rule(), Parser)
+    def test_rule_with_none(self):
+        self.assertIsInstance(Parser.rule(), Parser)
 
     def test_rule_with_parser(self):
         self.assertIsInstance(Parser.rule(NumberLiteral), Parser)
