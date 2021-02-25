@@ -264,7 +264,7 @@ class Parser():
             raise TypeError()
 
 
-    def reset(self, cls):
+    def reset(self, cls=None):
         if cls is None:
             self.elements = list()
             return self
