@@ -158,8 +158,7 @@ class Parser():
     # 字符串终结符
     class StrToken(AToken):
         def __init__(self, t):
-            pass
-            # super(StrToken, self).__init__(t)
+            super().__init__(t)
 
         def test(self, t):
             return t.isString()

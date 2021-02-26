@@ -125,6 +125,26 @@ class TestParser_NumToken(unittest.TestCase):
         result = token.test(self.token)
         self.assertEqual(result, True)
 
+class TestParser_StrToken(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.lineNumber = randint(1, 10)
+        self.value = 'hello'
+        self.token = StrToken(self.lineNumber, self.value)
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        token = Parser.StrToken(Name)
+        self.assertIsInstance(token, Parser.StrToken)
+
+    def test_test(self):
+        token = Parser.StrToken(Name)
+        result = token.test(self.token)
+        self.assertEqual(result, True)
 
 
 class TestParser_Factory(unittest.TestCase):
