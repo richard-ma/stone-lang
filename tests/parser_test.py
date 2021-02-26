@@ -11,7 +11,6 @@ from lib.astLeaf import *
 from lib.binaryExpr import *
 from lib.numberLiteral import *
 from lib.name import *
-from lib.idToken import IdToken
 
 class TestParser_Element(unittest.TestCase):
 
@@ -26,13 +25,18 @@ class TestParser_Tree(unittest.TestCase):
     """Test case docstring."""
 
     def setUp(self):
-        self.parser = Parser(ASTList)
-        self.tree = Parser.Tree(self.parser)
+        pass
 
     def tearDown(self):
         pass
 
     def test_init(self):
+        p = Parser(NumberLiteral)
+        self.assertIsInstance(p, Parser)
+
+        q = Parser(p)
+        self.assertIsInstance(q, Parser)
+
         with self.assertRaises(TypeError):
             Parser.Tree(1) # parameter must be instance of Parser
 
@@ -77,7 +81,7 @@ class TestParser_AToken(unittest.TestCase):
         pass
 
     def test_init(self):
-        atoken = AToken()
+        pass
 
 class TestParser_IdToken(unittest.TestCase):
 
@@ -85,14 +89,21 @@ class TestParser_IdToken(unittest.TestCase):
 
     def setUp(self):
         self.lineNumber = randint(1, 10)
-        self.value = ';'
+        self.value = 'hello'
         self.token = IdToken(self.lineNumber, self.value)
 
     def tearDown(self):
         pass
 
-    def test_name(self):
-        pass
+    def test_init(self):
+        token = Parser.IdToken(Name)
+        self.assertIsInstance(token, Parser.IdToken)
+
+    def test_test(self):
+        token = Parser.IdToken(Name)
+        result = token.test(self.token)
+        self.assertEqual(result, True)
+
 
 class TestParser_Factory(unittest.TestCase):
 

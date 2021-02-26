@@ -7,6 +7,7 @@ from types import FunctionType
 from lib.lexer import *
 from lib.astree import *
 from lib.astList import *
+from lib.astLeaf import *
 
 
 class Parser():
@@ -107,10 +108,11 @@ class Parser():
     # 终结符父类
     class AToken(Element):
         def __init__(self, t):
-            self.factory = Parser.Factory()
             if t is None:
-                t = eval(ASTLeaf.__name__)
-                factory = self.factory.get(t, StoneToken.__name__)
+                t = ASTLeaf
+
+            if issubclass(t, ASTLeaf):
+                self.factory = Parser.Factory.get(t)
 
         def parse(self, lexer, res):
             if not all(
@@ -135,8 +137,11 @@ class Parser():
 
     # ID终结符
     class IdToken(AToken):
-        def __init__(self, t, r):
-            # super(IdToken, self).__init__(t)
+        def __init__(self, t, r=None):
+            if not issubclass(t, ASTLeaf):
+                raise TypeError()
+
+            super().__init__(t)
             self.reserved = r if r != None else dict()
 
         def test(self, t):
@@ -145,8 +150,7 @@ class Parser():
     # 数值终结符
     class NumToken(AToken):
         def __init__(self, t):
-            pass
-            # super(NumToken, self).__init__(t)
+            super().__init__(t)
 
         def test(self, t):
             return t.isNumber()
@@ -271,6 +275,12 @@ class Parser():
             self.elements = list()
             self.factory = Parser.Factory.getForASTList(cls)
             return self
+        else:
+            raise TypeError()
+
+    def number(self, cls=None):
+        if issubclass(cls, ASTLeaf):
+            self.elements.add(NumToken(cls))
         else:
             raise TypeError()
 
