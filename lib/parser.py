@@ -26,12 +26,22 @@ class Parser():
         def __init__(self, parser):
             if not isinstance(parser, Parser):
                 raise TypeError()
+
             self.parser = parser
 
-        def parse(self, lexer: Lexer, res: ASTree):
+        def parse(self, lexer, res):
+            if not all(
+                isinstance(lexer, Lexer),
+                isinstance(res, list)
+            ):
+                raise TypeError()
+
             res.add(self.parser.parse(lexer))
 
-        def match(self, lexer: Lexer):
+        def match(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
             return self.parser.match(lexer)
 
     class OrTree(Element):
@@ -44,7 +54,7 @@ class Parser():
         def parse(self, lexer, res):
             if not all(
                     isinstance(lexer, Lexer),
-                    isinstance(res, ASTree)):
+                    isinstance(res, list)):
                 raise TypeError()
 
             p = self.choose(lexer)
@@ -89,12 +99,12 @@ class Parser():
         def parse(self, lexer, res):
             if not all(
                     isinstance(lexer, Lexer),
-                    isinstance(res, ASTree)):
+                    isinstance(res, list)):
                 raise TypeError()
 
             while self.parser.match(lexer):
                 t = self.parser.parse(lexer)
-                if isinstance(t, ASTList) or t.numChildren() > 0:
+                if not isinstance(t, ASTList) or t.numChildren() > 0:
                     res.add(t)
                 if self.onlyOnce:
                     break
@@ -162,6 +172,50 @@ class Parser():
 
         def test(self, t):
             return t.isString()
+
+    class Leaf(Element):
+        def __init__(self, pat):
+            self.tokens = pat
+
+        def parse(self, lexer, res):
+            if not all(
+                isinstance(lexer, Lexer),
+                isinstance(res, list)
+            ):
+                raise TypeError()
+
+            t = lexer.read()
+            if t.isIdentifier():
+                for token in self.tokens:
+                    if token == t.getText():
+                        self.find(res, t)
+                        return
+
+            if len(self.tokens) > 0:
+                raise ParseException(self.tokens[0] + " excepted.", t)
+            else:
+                raise ParseException(t)
+
+        def find(self, res, t):
+            if not all(
+                isinstance(res, list),
+                isinstance(t, StoneToken)
+            ):
+                raise TypeError()
+
+            res.add(ASTLeaf(t))
+
+        def match(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
+            t = lexer.peek(0)
+            if t.isIdentifier():
+                for token in self.tokens:
+                    if token == t.getText()
+                        return True
+
+            return False
 
     # 创建ASTree类型及子类型的工厂
     class Factory():
