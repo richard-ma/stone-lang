@@ -30,10 +30,10 @@ class Parser():
             self.parser = parser
 
         def parse(self, lexer, res):
-            if not all(
+            if not all([
                 isinstance(lexer, Lexer),
                 isinstance(res, list)
-            ):
+            ]):
                 raise TypeError()
 
             res.add(self.parser.parse(lexer))
@@ -52,9 +52,10 @@ class Parser():
             self.parsers = parsers
 
         def parse(self, lexer, res):
-            if not all(
+            if not all([
                     isinstance(lexer, Lexer),
-                    isinstance(res, list)):
+                    isinstance(res, list)
+            ]):
                 raise TypeError()
 
             p = self.choose(lexer)
@@ -88,18 +89,20 @@ class Parser():
 
     class Repeat(Element):
         def __init__(self, parser, once):
-            if not all(
+            if not all([
                     isinstance(parser, Parser),
-                    isinstance(once, bool)):
+                    isinstance(once, bool)
+            ]):
                 raise TypeError()
 
             self.parser = parser
             self.onlyOnce = once
 
         def parse(self, lexer, res):
-            if not all(
+            if not all([
                     isinstance(lexer, Lexer),
-                    isinstance(res, list)):
+                    isinstance(res, list)
+            ]):
                 raise TypeError()
 
             while self.parser.match(lexer):
@@ -125,9 +128,10 @@ class Parser():
                 self.factory = Parser.Factory.get(t)
 
         def parse(self, lexer, res):
-            if not all(
+            if not all([
                     isinstance(lexer, Lexer),
-                    isinstance(res, list)):
+                    isinstance(res, list)
+            ]):
                 raise TypeError()
 
             t = lexer.read()
@@ -178,10 +182,10 @@ class Parser():
             self.tokens = pat
 
         def parse(self, lexer, res):
-            if not all(
+            if not all([
                 isinstance(lexer, Lexer),
                 isinstance(res, list)
-            ):
+            ]):
                 raise TypeError()
 
             t = lexer.read()
@@ -197,10 +201,10 @@ class Parser():
                 raise ParseException(t)
 
         def find(self, res, t):
-            if not all(
+            if not all([
                 isinstance(res, list),
                 isinstance(t, StoneToken)
-            ):
+            ]):
                 raise TypeError()
 
             res.add(ASTLeaf(t))
@@ -222,16 +226,18 @@ class Parser():
             super().__init__(t)
 
         def find(self, res, t):
-            if not all(
+            if not all([
                     isinstance(res, list),
-                    isinstance(t, StoneToken)):
+                    isinstance(t, StoneToken)
+            ]):
                 raise TypeError()
 
     class Precedence():
         def __init__(self, v, a):
-            if not all(
+            if not all([
                     isinstance(v, int),
-                    isinstance(a, bool)):
+                    isinstance(a, bool)
+            ]):
                 raise TypeError()
 
             self.value = v
