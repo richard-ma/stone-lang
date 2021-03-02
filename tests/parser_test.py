@@ -3,6 +3,7 @@
 
 import unittest
 from random import randint
+from random import choice
 
 from lib.parser import *
 from lib.astree import *
@@ -90,6 +91,24 @@ class TestParser_Skip(unittest.TestCase):
     def test_find(self):
         s = Parser.Skip(self.token)
         self.assertEqual(None, s.find(list(), self.token))
+
+
+class TestParser_Precedence(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.v = randint(1, 10)
+        self.a = choice([True, False])
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        p = Parser.Precedence(self.v, self.a)
+        self.assertEqual(self.v, p.value)
+        self.assertEqual(self.a, p.leftAssoc)
+
 
 class TestParser_AToken(unittest.TestCase):
 
