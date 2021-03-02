@@ -70,6 +70,27 @@ class TestParser_Repeat(unittest.TestCase):
         with self.assertRaises(TypeError):
             Parser.Repeat(1, 1)
 
+class TestParser_Skip(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.lineNumber = randint(1, 10)
+        self.value = 'hello'
+        self.token = IdToken(self.lineNumber, self.value)
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        s = Parser.Skip(self.token)
+        self.assertIsInstance(s, Parser.Skip)
+        self.assertIsInstance(s, Parser.Leaf)
+
+    def test_find(self):
+        s = Parser.Skip(self.token)
+        self.assertEqual(None, s.find(list(), self.token))
+
 class TestParser_AToken(unittest.TestCase):
 
     """Test case docstring."""
