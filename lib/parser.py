@@ -212,10 +212,30 @@ class Parser():
             t = lexer.peek(0)
             if t.isIdentifier():
                 for token in self.tokens:
-                    if token == t.getText()
+                    if token == t.getText():
                         return True
 
             return False
+
+    class Skip(Leaf):
+        def __init__(self, t):
+            super().__init__(t)
+
+        def find(self, res, t):
+            if not all(
+                    isinstance(res, list),
+                    isinstance(t, StoneToken)):
+                raise TypeError()
+
+    class Precedence():
+        def __init__(self, v, a):
+            if not all(
+                    isinstance(v, int),
+                    isinstance(a, bool)):
+                raise TypeError()
+
+            self.value = v
+            self.leftAssoc = a
 
     # 创建ASTree类型及子类型的工厂
     class Factory():
