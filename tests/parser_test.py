@@ -71,44 +71,6 @@ class TestParser_Repeat(unittest.TestCase):
         with self.assertRaises(TypeError):
             Parser.Repeat(1, 1)
 
-class TestParser_Skip(unittest.TestCase):
-
-    """Test case docstring."""
-
-    def setUp(self):
-        self.lineNumber = randint(1, 10)
-        self.value = 'hello'
-        self.token = IdToken(self.lineNumber, self.value)
-
-    def tearDown(self):
-        pass
-
-    def test_init(self):
-        s = Parser.Skip(self.token)
-        self.assertIsInstance(s, Parser.Skip)
-        self.assertIsInstance(s, Parser.Leaf)
-
-    def test_find(self):
-        s = Parser.Skip(self.token)
-        self.assertEqual(None, s.find(list(), self.token))
-
-
-class TestParser_Precedence(unittest.TestCase):
-
-    """Test case docstring."""
-
-    def setUp(self):
-        self.v = randint(1, 10)
-        self.a = choice([True, False])
-
-    def tearDown(self):
-        pass
-
-    def test_init(self):
-        p = Parser.Precedence(self.v, self.a)
-        self.assertEqual(self.v, p.value)
-        self.assertEqual(self.a, p.leftAssoc)
-
 
 class TestParser_AToken(unittest.TestCase):
 
@@ -185,6 +147,45 @@ class TestParser_StrToken(unittest.TestCase):
         token = Parser.StrToken(Name)
         result = token.test(self.token)
         self.assertEqual(result, True)
+
+
+class TestParser_Skip(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.lineNumber = randint(1, 10)
+        self.value = 'hello'
+        self.token = IdToken(self.lineNumber, self.value)
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        s = Parser.Skip(self.token)
+        self.assertIsInstance(s, Parser.Skip)
+        self.assertIsInstance(s, Parser.Leaf)
+
+    def test_find(self):
+        s = Parser.Skip(self.token)
+        self.assertEqual(None, s.find(list(), self.token))
+
+
+class TestParser_Precedence(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.v = randint(1, 10)
+        self.a = choice([True, False])
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        p = Parser.Precedence(self.v, self.a)
+        self.assertEqual(self.v, p.value)
+        self.assertEqual(self.a, p.leftAssoc)
 
 
 class TestParser_Factory(unittest.TestCase):
