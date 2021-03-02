@@ -179,6 +179,9 @@ class Parser():
 
     class Leaf(Element):
         def __init__(self, pat):
+            if not isinstance(pat, list):
+                raise TypeError()
+
             self.tokens = pat
 
         def parse(self, lexer, res):
