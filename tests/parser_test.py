@@ -149,6 +149,21 @@ class TestParser_StrToken(unittest.TestCase):
         self.assertEqual(result, True)
 
 
+class TestParser_Leaf(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.pat = ['hello', 'world']
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        l = Parser.Leaf(self.pat)
+        self.assertIsInstance(l, Parser.Leaf)
+
+
 class TestParser_Skip(unittest.TestCase):
 
     """Test case docstring."""
@@ -184,6 +199,37 @@ class TestParser_Precedence(unittest.TestCase):
 
     def test_init(self):
         p = Parser.Precedence(self.v, self.a)
+        self.assertEqual(self.v, p.value)
+        self.assertEqual(self.a, p.leftAssoc)
+
+
+class TestParser_Operators(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.v = randint(1, 10)
+        self.a = choice([True, False])
+        self.precedence = Parser.Precedence(self.v, self.a)
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        o = Parser.Operators()
+        self.assertIsInstance(o, dict)
+
+        self.assertEqual(True, o.LEFT)
+        self.assertEqual(False, o.RIGHT)
+
+    def test_add(self):
+        o = Parser.Operators()
+        k = 'hello'
+        o.add(k, self.v, self.a)
+
+        self.assertEqual(1, len(o))
+        self.assertIn(k, o.keys())
+        p = o[k]
         self.assertEqual(self.v, p.value)
         self.assertEqual(self.a, p.leftAssoc)
 

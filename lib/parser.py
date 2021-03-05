@@ -246,6 +246,13 @@ class Parser():
             self.value = v
             self.leftAssoc = a
 
+    class Operators(dict):
+        LEFT = True
+        RIGHT = False
+
+        def add(self, name, prec, leftAssoc):
+            self.__setitem__(name, Parser.Precedence(prec, leftAssoc))
+
     # 创建ASTree类型及子类型的工厂
     class Factory():
         FACTORY_NAME = 'create'
