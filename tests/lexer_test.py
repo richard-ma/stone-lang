@@ -84,25 +84,26 @@ class TestLexer(unittest.TestCase):
         token = self.lexer.peek(0)
         self.assertEqual(isinstance(token, IdToken), True)
         self.assertEqual('First', token.getText())
-        self.lexer.read()
 
         # 1 NumToken
-        token = self.lexer.peek(0)
+        token = self.lexer.peek(1)
         self.assertEqual(isinstance(token, NumToken), True)
         self.assertEqual('1', token.getText())
-        self.lexer.read()
 
         # "string" StrToken
-        token = self.lexer.peek(0)
+        token = self.lexer.peek(2)
         self.assertEqual(isinstance(token, StrToken), True)
         self.assertEqual('"string', token.getText()) # match "string
-        self.lexer.read()
 
         # EOL Token
-        token = self.lexer.peek(0)
+        token = self.lexer.peek(3)
         self.assertEqual(isinstance(token, IdToken), True)
         self.assertEqual('\\n', token.getText()) # \n -> \\n
-        self.lexer.read()
+
+        token = self.lexer.read()
+        self.assertEqual(isinstance(token, IdToken), True)
+        self.assertEqual('First', token.getText())
+
 
 
 if __name__ == '__main__':
