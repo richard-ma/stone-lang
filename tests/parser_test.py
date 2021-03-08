@@ -234,6 +234,25 @@ class TestParser_Operators(unittest.TestCase):
         self.assertEqual(self.a, p.leftAssoc)
 
 
+class TestParser_Expr(unittest.TestCase):
+
+    """Test case docstring."""
+
+    def setUp(self):
+        self.cls = Name
+        self.exp = Parser(Name)
+        self.map = Parser.Operators()
+
+    def tearDown(self):
+        pass
+
+    def test_init(self):
+        expr = Parser.Expr(self.cls, self.exp, self.map)
+        self.assertIsInstance(expr.factory, Parser.Factory)
+        self.assertIsInstance(expr.ops, Parser.Operators)
+        self.assertIsInstance(expr.factor, Parser)
+
+
 class TestParser_Factory(unittest.TestCase):
 
     """Test case docstring."""
