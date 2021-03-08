@@ -53,8 +53,8 @@ class Parser():
 
         def parse(self, lexer, res):
             if not all([
-                    isinstance(lexer, Lexer),
-                    isinstance(res, list)
+                isinstance(lexer, Lexer),
+                isinstance(res, list)
             ]):
                 raise TypeError()
 
@@ -90,8 +90,8 @@ class Parser():
     class Repeat(Element):
         def __init__(self, parser, once):
             if not all([
-                    isinstance(parser, Parser),
-                    isinstance(once, bool)
+                isinstance(parser, Parser),
+                isinstance(once, bool)
             ]):
                 raise TypeError()
 
@@ -100,8 +100,8 @@ class Parser():
 
         def parse(self, lexer, res):
             if not all([
-                    isinstance(lexer, Lexer),
-                    isinstance(res, list)
+                isinstance(lexer, Lexer),
+                isinstance(res, list)
             ]):
                 raise TypeError()
 
@@ -129,8 +129,8 @@ class Parser():
 
         def parse(self, lexer, res):
             if not all([
-                    isinstance(lexer, Lexer),
-                    isinstance(res, list)
+                isinstance(lexer, Lexer),
+                isinstance(res, list)
             ]):
                 raise TypeError()
 
@@ -230,16 +230,16 @@ class Parser():
 
         def find(self, res, t):
             if not all([
-                    isinstance(res, list),
-                    isinstance(t, StoneToken)
+                isinstance(res, list),
+                isinstance(t, StoneToken)
             ]):
                 raise TypeError()
 
     class Precedence():
         def __init__(self, v, a):
             if not all([
-                    isinstance(v, int),
-                    isinstance(a, bool)
+                isinstance(v, int),
+                isinstance(a, bool)
             ]):
                 raise TypeError()
 
@@ -252,6 +252,83 @@ class Parser():
 
         def add(self, name, prec, leftAssoc):
             self.__setitem__(name, Parser.Precedence(prec, leftAssoc))
+
+    class Expr(Element):
+        def __init__(self, cls, exp, map):
+            if not all([
+                issubclass(cls, ASTree),
+                isinstance(exp, Parser),
+                isinstance(map, Parser.Operators)
+            ]):
+                raise TypeError()
+
+            self.factory = Parser.Factory.getForASTList(cls)
+            self.ops = map
+            self.factor = exp
+
+        def parse(self, lexer, res):
+            if not all([
+                isinstance(lexer, Lexer),
+                isinstance(res, list)
+            ]):
+                raise TypeError()
+
+            right = self.factor.parse(lexer)
+            prec = self.nextOperator(lexer)
+
+            while None != prec:
+                right = self.doShift(lexer, right, prec.value)
+
+            res.add(right)
+
+        def doShift(self, lexer, left, prec):
+            if not all([
+                isinstance(lexer, Lexer),
+                isinstance(left, ASTree),
+                isinstance(prec, int)
+            ]):
+                raise TypeError()
+
+            l = list()
+            l.add(left)
+            l.add(ASTLeaf(lexer.read()))
+            right = self.factor.parse(lexer)
+            next = self.nextOperator(lexer)
+            while None != next and self.rightIsExpr(prec, next):
+                right = self.doShift(lexer, right, next.value)
+
+            l.add(right)
+
+            return self.factory.make(l)
+
+        def nextOperator(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
+            t = lexer.peek(0)
+            if t.isIdentifier():
+                return self.ops.get(t.getText())
+            else:
+                return None
+
+        def rightIsExpr(self, prec, nextPrec):
+            if not all([
+                isinstance(prec, int),
+                isinstance(nextPrec, Parser.Precedence)
+            ]):
+                raise TypeError()
+
+            if nextPrec.leftAssoc:
+                return prec < nextPrec.value
+            else:
+                return prec <= nextPrec.value
+
+        def match(self, lexer):
+            if not isinstance(lexer, Lexer):
+                raise TypeError()
+
+            return self.factor.match(lexer)
+
 
     # 创建ASTree类型及子类型的工厂
     class Factory():
