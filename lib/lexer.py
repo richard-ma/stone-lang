@@ -102,20 +102,22 @@ class Lexer():
     def toStringLiteral(self, s):
         sb = list()
         l = len(s) - 1
-        i = 0
+        i = 1
         while i < l:
             c = s[i]
             if c == '\\' and i + 1 < l:
                 c2 = s[i+1]
                 if c2 == '"' or c2 == '\\':
                     c = s[i+1]
-                elif c2 == 'n':
                     i += 1
+                elif c2 == 'n':
                     c = '\n'
+                    i += 1
 
             sb.append(c)
             i += 1
         return ''.join(sb)
+
 
 if __name__ == "__main__":
     with open("samples/first.stone", 'r') as f:
