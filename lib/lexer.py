@@ -103,7 +103,7 @@ class Lexer():
             c = s[i]
             if c == '\\' and i + 1 < l:
                 c2 = s[i+1]
-                if c2 == "" or c2 == '\\':
+                if c2 == '"' or c2 == '\\':
                     c = s[i+1]
                 elif c2 == 'n':
                     i += 1
