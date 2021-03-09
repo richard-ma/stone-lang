@@ -95,6 +95,10 @@ class Lexer():
                 #print("[%d] %s" % (token.getLineNumber(), token.getText()))
                 self.queue.append(token)
 
+    # onvert escape character to normal character
+    # "\\" -> '\'
+    # "\n" -> '\n'
+    # "\"" => '"'
     def toStringLiteral(self, s):
         sb = list()
         l = len(s) - 1
