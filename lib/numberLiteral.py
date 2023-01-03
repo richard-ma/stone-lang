@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from lib.astLeaf import ASTLeaf
+from astLeaf import ASTLeaf
 
 class NumberLiteral(ASTLeaf):
     def __init__(self, token):
