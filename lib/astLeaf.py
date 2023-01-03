@@ -27,9 +27,6 @@ class ASTLeaf(ASTree):
     def token(self):
         return self._token
 
-    def add(self, value): # 叶子节点不能添加child
-        # throw Exception
-        raise NotImplementedError()
 
 if __name__ == '__main__':
     from numToken import NumToken
