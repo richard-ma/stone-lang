@@ -5,35 +5,35 @@ from astree import ASTree
 
 class ASTList(ASTree):
     def __init__(self, l):
-        self.l = l
+        self._children = l
 
     def child(self, i):
-        return self.l[i]
+        return self._children[i]
 
     def numChildren(self):
-        return len(self.l)
+        return len(self._children)
 
     def children(self):
-        return self.l
+        return iter(self._children) 
 
     def __str__(self):
         builder = list()
         builder.append('(')
 
         sep = ""
-        for child in self.l:
+        for t in self._children:
             builder.append(sep)
             sep = " "
-            builder.append(str(child))
+            builder.append(str(t))
 
         builder.append(')')
 
         return ''.join(builder)
 
     def location(self):
-        for child in self.l:
-            s = child.location()
-            if s != None:
+        for t in self._children:
+            s = t.location()
+            if s is not None:
                 return s
 
         return None
