@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from lib.stoneToken import StoneToken
+from stoneToken import StoneToken
 
 class ParseException(Exception):
     def __init__(self, t, msg = ''):
