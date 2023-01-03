@@ -24,9 +24,6 @@ class ASTree(ABC):
     def location(self):
         pass
 
-    @abstractmethod
-    def add(self, child):
-        pass
 
 if __name__ == '__main__':
     a = ASTree() # TypeError
