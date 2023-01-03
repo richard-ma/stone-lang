@@ -35,7 +35,7 @@ class Lexer():
         self.regexPat = "\\s*((//.*)|([0-9]+)|(\"(\\\\\"|\\\\\\\\|\\\\n|[^\"])*\")" + \
                 "|[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\\|\\||[`~!@#\$%\^&\*\(\)-=_+\[\]\\\{\}\|;':\",./<>\?])?"
         self.pattern = re.compile(self.regexPat)
-        self.queue = deque()
+        self.queue = deque() # ArrayList<Token> in java
         self.hasMore = True
         self.reader = reader
 
@@ -79,7 +79,7 @@ class Lexer():
                 pos = matcher.end() # 更新位置，当前匹配的对象跳过去，看后面的部分
                 #print("pos: %d" % (pos))
             else:
-                raise ParseException("Bad token at line" + lineNo) # 没有匹配，证明这个地方的单词不合法，有语法错误
+                raise ParseException("Bad token at line " + lineNo) # 没有匹配，证明这个地方的单词不合法，有语法错误
         self.queue.append(IdToken(lineNo, StoneToken.EOL)) # 添加行结束token
 
     def addToken(self, lineNo, matcher):
