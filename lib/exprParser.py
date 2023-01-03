@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from lib.lexer import *
-from lib.parseException import *
-from lib.astLeaf import ASTLeaf
-from lib.binaryExpr import BinaryExpr
-from lib.numberLiteral import NumberLiteral
+from lexer import *
+from parseException import *
+from astLeaf import ASTLeaf
+from binaryExpr import BinaryExpr
+from numberLiteral import NumberLiteral
 
 class ExprParser():
     def __init__(self, p):
