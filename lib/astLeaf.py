@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from collections import deque
 from astree import ASTree
 
 class ASTLeaf(ASTree):
     def __init__(self, token):
+        self._empty = deque()
         self._token = token
 
     def child(self, i):
@@ -15,8 +17,7 @@ class ASTLeaf(ASTree):
         return 0 # num of children is 0
 
     def children(self):
-        # throw Exception
-        raise NotImplementedError()
+        return iter(self._empty)
 
     def __str__(self):
         return self._token.getText()
