@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from lib.stoneToken import StoneToken
+from stoneToken import StoneToken
 
 class NumToken(StoneToken):
     def __init__(self, line, value):
