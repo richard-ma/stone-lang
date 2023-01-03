@@ -2,9 +2,13 @@
 # -*- coding: utf-8 -*-
 
 class StoneException(Exception):
-    def __init__(self, errmsg):
-        super(StoneException, self).__init__()
-        self.errmsg = errmsg
+    # TODO: ADD AST tree initial object
+    def __init__(self, errmsg, t=None):
+        if t is None:
+            super(StoneException, self).__init__()
+            self.errmsg = errmsg
+        else:
+            pass # ASTtree is not None
 
     def __str__(self):
         return self.errmsg
