@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from lib.stoneException import StoneException
+from stoneException import StoneException
 
 class StoneToken():
     EOF = None
