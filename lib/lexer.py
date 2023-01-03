@@ -5,11 +5,11 @@ import re
 from collections import deque
 from io import IOBase
 
-from lib.stoneToken import StoneToken
-from lib.numToken import NumToken
-from lib.strToken import StrToken
-from lib.idToken import IdToken
-from lib.parseException import ParseException
+from stoneToken import StoneToken
+from numToken import NumToken
+from strToken import StrToken
+from idToken import IdToken
+from parseException import ParseException
 
 class LineReader():
     def __init__(self, f):
