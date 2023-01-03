@@ -1,8 +1,8 @@
 import argparse
 
-from lib.stoneToken import StoneToken
-from lib.lexer import LineReader
-from lib.lexer import Lexer
+from stoneToken import StoneToken
+from lexer import LineReader
+from lexer import Lexer
 
 
 if __name__ == "__main__":
