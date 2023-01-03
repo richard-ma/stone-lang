@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from lib.astree import ASTree
+from astree import ASTree
 
 class ASTLeaf(ASTree):
     def __init__(self, token):
