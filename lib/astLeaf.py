@@ -12,8 +12,7 @@ class ASTLeaf(ASTree):
         raise NotImplementedError()
 
     def numChildren(self):
-        # throw Exception
-        raise NotImplementedError()
+        return 0 # num of children is 0
 
     def children(self):
         # throw Exception
