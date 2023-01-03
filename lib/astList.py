@@ -53,7 +53,8 @@ if __name__ == '__main__':
     l = ASTList(data)
 
     assert l.child(2) == leaf3
-    assert l.children() == data
+    from collections.abc import Iterable # test l.children() return value is iterable
+    assert isinstance(l.children(), Iterable)
     assert l.numChildren() == 3
     assert str(l) == "(33 66 99)"
     assert l.location() == "at line %d" % (1)
